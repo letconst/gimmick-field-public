@@ -31,6 +31,6 @@ public class CameraController : MonoBehaviour
                 //カメラの回転
                 this.transform.RotateAround(this.transform.position, this.transform.right, -_RotY);
             }
-        });
+        }).AddTo(this);
     }
 }

@@ -73,7 +73,7 @@ public class Rock : MonoBehaviour, IActionable
         Vector3 angle = /*PlayerManager.Instance.PlayerThrowAngleTrf.position -*/
                         PlayerManager.Instance.PlayerHandTrf.position;
 
-        Vector3 dir = Quaternion.Euler(angle) * Camera.main.transform.forward;
+        Vector3 dir = /*Quaternion.Euler(angle) * */Camera.main.transform.forward;
         float acceleration = new Vector3(_state.acceleration.x,
                                          _state.acceleration.y,
                                          _state.acceleration.z).magnitude;

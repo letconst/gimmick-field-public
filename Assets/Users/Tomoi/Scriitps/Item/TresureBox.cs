@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TresureBox : MonoBehaviour,IActionable
 {
-    private Animation _animation;
-    private bool isOpen = false;
+    private Animator _animator;
+    private bool     isOpen = false;
+
+    private static readonly int Open = Animator.StringToHash("Open");
 
     public HandType RequireHand { get; private set; }
 
     void Start()
     {
-        _animation = gameObject.GetComponentInChildren<Animation>();
-
+        _animator   = GetComponent<Animator>();
         RequireHand = HandType.Both;
     }
 
@@ -30,7 +29,8 @@ public class TresureBox : MonoBehaviour,IActionable
     {
         if(!isOpen)
         {
-            _animation.Play();
+            _animator.SetTrigger(Open);
+            Gamemaneger.Instance.OnClear();
         }
         isOpen = true;
     }

@@ -14,6 +14,8 @@ public class TitleController : MonoBehaviour
         // それぞれボタン押下時にチュートリアルシーンへ遷移
         _inputController.OnClickABXYButtonSubject.Subscribe(OnButtonPressed);
         _inputController.OnClickGrabButtonSubject.Subscribe(OnButtonPressed);
+
+        SoundManager.StopAll();
     }
 
     /// <summary>
@@ -28,6 +30,6 @@ public class TitleController : MonoBehaviour
 
         _isPressed = true;
 
-        SystemSceneManager.LoadNextScene("TutorialAlpha", SceneTransition.Fade);
+        SystemSceneManager.LoadNextScene("TutorialTrial1", SceneTransition.Fade);
     }
 }

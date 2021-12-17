@@ -4,6 +4,7 @@ using UniRx;
 using UniRx.Triggers;
 using System;
 using System.ComponentModel.Design;
+using nn.util;
 using UnityEngine.InputSystem;
 
 public class SwitchInputController : SingletonMonoBehaviour<SwitchInputController>
@@ -82,6 +83,14 @@ public class SwitchInputController : SingletonMonoBehaviour<SwitchInputControlle
         axis.y =(float) rStick.y / (float) AnalogStickState.Max;
         return axis;
     }
+
+    //右コントローラーの加速度の取得
+    private Subject<Float3> _RcontllolerAccelerometer = new Subject<Float3>();
+    public IObservable<Float3> GetRcontllolerAccelerometer => _RcontllolerAccelerometer;
+
+    //左コントローラーの加速度の取得
+    private Subject<Float3> _LcontllolerAccelerometer = new Subject<Float3>();
+    public IObservable<Float3> GetLcontllolerAccelerometer => _LcontllolerAccelerometer;
 
     void Start()
     {
@@ -201,21 +210,19 @@ public class SwitchInputController : SingletonMonoBehaviour<SwitchInputControlle
                         LeftJoyConRotaion = state;
                         LJoyConAccel      = accel;
                         LJoyConVelocity   = velocity;
+                        _LcontllolerAccelerometer.OnNext(state.acceleration);
                         break;
                     case 1://右1
                         RightJoyConRotaion = state;
                         RJoyConAccel       = accel;
                         RJoyConVelocity    = velocity;
+                        _RcontllolerAccelerometer.OnNext(state.acceleration);
                     break;
                 }
             }
         }
     }
-
-    /*SixAxisSensorState CorrectAxis(SixAxisSensorState original, SixAxisSensorState Correction)
-    {
-        original.direction.x = original.direction.x - Correction.direction.x;
-    }*/
+    
     private bool UpdatePadState()
     {
         //コントローラーの持ち方の取得
@@ -296,12 +303,5 @@ public class SwitchInputController : SingletonMonoBehaviour<SwitchInputControlle
         {
             SixAxisSensor.Start(handle[i]);
         }
-    }
-    //今の値-保存した初期位置
-
-    //
-    void SetSixAxisSencer()
-    {
-
     }
 }

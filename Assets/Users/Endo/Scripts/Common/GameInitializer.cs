@@ -17,5 +17,9 @@ public static class GameInitializer
         GameObject gameSystemObj = await Addressables.InstantiateAsync("GameSystem");
         gameSystemObj.name = gameSystemObj.name.Replace("(Clone)", "");
         Object.DontDestroyOnLoad(gameSystemObj);
+
+        // サウンドマネージャー生成
+        GameObject soundManagerObj = await Addressables.InstantiateAsync("SoundManager");
+        soundManagerObj.name = soundManagerObj.name.Replace("(Clone)", "");
     }
 }

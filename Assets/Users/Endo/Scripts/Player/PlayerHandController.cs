@@ -96,15 +96,17 @@ public class PlayerHandController : MonoBehaviour
         // 左手の回転
         _inputController.LeftJoyConRotaion.GetQuaternion(ref _npadRot);
         _leftRot.Set(_npadRot.x, _npadRot.z, _npadRot.y, -_npadRot.w);
-        _leftRot          *= Quaternion.Euler(90, 90, 90);
-        _leftRot          *= Quaternion.Euler(0, 180, 0);
-        leftHand.rotation =  _leftRot;
+        _leftRot               *= Quaternion.AngleAxis(90, Vector3.right);
+        _leftRot               *= Quaternion.AngleAxis(180, Vector3.up);
+        leftHand.rotation      =  _leftRot;
+        leftHand.localRotation =  _leftRot; // ローカル回転にも代入してカメラの回転に追従させる
 
         // 右手の回転
         _inputController.RightJoyConRotaion.GetQuaternion(ref _npadRot);
         _rightRot.Set(_npadRot.x, _npadRot.z, _npadRot.y, -_npadRot.w);
-        _rightRot          *= Quaternion.Euler(90, 90, 90);
-        _rightRot          *= Quaternion.Euler(0, 180, 0);
-        rightHand.rotation =  _rightRot;
+        _rightRot               *= Quaternion.AngleAxis(90, Vector3.right);
+        _rightRot               *= Quaternion.AngleAxis(180, Vector3.up);
+        rightHand.rotation      =  _rightRot;
+        rightHand.localRotation =  _rightRot;
     }
 }

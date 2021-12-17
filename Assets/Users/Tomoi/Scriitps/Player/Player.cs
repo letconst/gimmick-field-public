@@ -13,6 +13,10 @@ public class Player : MonoBehaviour
     float SpeedParameter = 1;
     [SerializeField]
     GameObject camera;
+
+    // FIXME: 暫定
+    public bool canMovement = true;
+
     void Start()
     {
         PlayerGameObject = this.gameObject;
@@ -25,9 +29,14 @@ public class Player : MonoBehaviour
         {
             //Debug.Log(_ABXYButton);
         });
-        SwitchInputController.Instance.OnInputLstickResiveed.Subscribe( Vector2 =>
+        // FIXME: Where暫定
+        SwitchInputController.Instance.OnInputLstickResiveed.Where(_ => canMovement).Subscribe( Vector2 =>
         {
             PlayerAddForce(camera.transform.right * Vector2.x,GenerateZVector3(Vector2.y) );
+        });
+        Gamemaneger.Instance.GameOver.Subscribe(_ =>
+        {
+            Debug.Log("GameOver");
         });
     }
     //PlayerAddForceに渡すz軸用ののVector3を生成する
