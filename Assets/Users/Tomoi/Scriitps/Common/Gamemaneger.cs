@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UniRx;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Gamemaneger : SingletonMonoBehaviour<Gamemaneger>
@@ -35,12 +36,22 @@ public class Gamemaneger : SingletonMonoBehaviour<Gamemaneger>
                     _isReachedGameOver = true;
                     player.canMovement = false;
                     gameOverImg.gameObject.SetActive(true);
-                })
-                .AddTo(this);
+                }).AddTo(this);
 
         SwitchInputController.Instance.OnClickABXYButtonSubject
                              .Where(_ => _isReachedGameOver)
-                             .Subscribe(_ => { SystemSceneManager.LoadNextScene("Title", SceneTransition.Fade); })
+                             .Subscribe(_ =>
+                             {
+                                 // FIXME: 暫定
+                                 if (SceneManager.GetActiveScene().name.Equals("TutorialV2"))
+                                 {
+                                     SystemSceneManager.LoadNextScene("MainGame", SceneTransition.Fade);
+                                 }
+                                 else
+                                 {
+                                     SystemSceneManager.LoadNextScene("Title", SceneTransition.Fade);
+                                 }
+                             })
                              .AddTo(this);
     }
 

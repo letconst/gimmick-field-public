@@ -26,8 +26,8 @@ public class Rock : MonoBehaviour, IActionable
 
     private nn.util.Float4 _npadQuaternion;
     private Quaternion     _quaternion;
-
-    public HandType RequireHand { get; private set; }
+    public  bool           _isOutline  { get; private set; }
+    public  HandType       RequireHand { get; private set; }
 
     #endregion
 
@@ -37,41 +37,46 @@ public class Rock : MonoBehaviour, IActionable
         _selfCollider = GetComponent<Collider>();
         _playerTrf    = GameObject.FindWithTag("Player").transform;
 
+        _isOutline  = true;
         RequireHand = HandType.One;
     }
 
     private void Update()
     {
         NpadSample();
+    }
 
+    private void LateUpdate()
+    {
         if (_isHoldByPlayer)
         {
             transform.position = PlayerManager.Instance.PlayerHandTrf.position;
         }
     }
 
-    public void Action()
+    public async void Action()
     {
         // 保持状態にする
         _isHoldByPlayer = true;
         // 重力無効化
-        _selfRig.useGravity = false;
-        // プレイヤーとの物理判定を無視するレイヤーに切り替え
-        gameObject.layer = 3;
+        _selfRig.useGravity   = false;
+        _selfRig.constraints  = RigidbodyConstraints.FreezeRotation;
+        _selfCollider.enabled = false;
 
-        PlayerManager.Instance.HoldObject = this;
+        await PlayerHandController.TransitionHand(PlayerHandController.Hand.Right,
+                                                  PlayerHandController.HandPosition.Grab,
+                                                  PlayerHandController.HandPosition.Hold);
     }
 
     public void DeAction()
     {
-        _isHoldByPlayer     = false;
-        _selfRig.useGravity = true;
-        gameObject.layer    = 0;
-
-        PlayerManager.Instance.HoldObject = null;
+        _isHoldByPlayer       = false;
+        _selfRig.useGravity   = true;
+        _selfRig.constraints  = RigidbodyConstraints.None;
+        _selfCollider.enabled = true;
 
         Vector3 angle = /*PlayerManager.Instance.PlayerThrowAngleTrf.position -*/
-                        PlayerManager.Instance.PlayerHandTrf.position;
+            PlayerManager.Instance.PlayerHandTrf.position;
 
         Vector3 dir = /*Quaternion.Euler(angle) * */Camera.main.transform.forward;
         float acceleration = new Vector3(_state.acceleration.x,
@@ -80,6 +85,19 @@ public class Rock : MonoBehaviour, IActionable
 
         // 持ってる石を、Joy-Conを振った加速度で飛ばす
         _selfRig.AddForce(dir * acceleration * throwSensitivity, ForceMode.VelocityChange);
+
+        PlayerHandController.SetPositionTo(PlayerHandController.HandPosition.Idle, PlayerHandController.Hand.Right,
+                                           .15f);
+    }
+
+    public void ShowOutline()
+    {
+        gameObject.layer = 9;
+    }
+
+    public void HideOutline()
+    {
+        gameObject.layer = 0;
     }
 
     #region 暫定サンプルコード

@@ -122,7 +122,7 @@ public class SwitchInputController : SingletonMonoBehaviour<SwitchInputControlle
 
                     _GrabButtonSubject.OnNext(_grabButton);
                 }
-            );
+            ).AddTo(this);
 
 
         ABXYButton _abxyButton = default;
@@ -156,17 +156,17 @@ public class SwitchInputController : SingletonMonoBehaviour<SwitchInputControlle
 
                     _ABXYButtonSubject.OnNext(_abxyButton);
                 }
-            );
+            ).AddTo(this);
         //左コントローラーのジョイスティックに入力があったらOnInputLstickResiveedから通知する処理
         this.UpdateAsObservable()
             .Where(_ => LJoyStic() != Vector2.zero)
             .Subscribe(_ => { _LJoyStickSubject.OnNext(LJoyStic()); }
-            );
+            ).AddTo(this);
         //右コントローラーのジョイスティックに入力があったらOnInputRstickResiveedから通知する処理
         this.UpdateAsObservable()
             .Where(_ => RJoyStic() != Vector2.zero)
             .Subscribe(_ => { _RJoyStickSubject.OnNext(RJoyStic()); }
-            );
+            ).AddTo(this);
     }
     private SixAxisSensorState state = new SixAxisSensorState();
 

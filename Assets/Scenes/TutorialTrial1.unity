@@ -271,7 +271,7 @@ GameObject:
   - component: {fileID: 18154686}
   - component: {fileID: 18154688}
   - component: {fileID: 18154687}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -369,7 +369,7 @@ ParticleSystem:
   m_GameObject: {fileID: 18154685}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -5161,6 +5161,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c03c5126214e824a9760247626d4a05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _successRotation: 0
+  _successAccel: 0
 --- !u!65 &31932475
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5561,7 +5563,7 @@ GameObject:
   - component: {fileID: 74665903}
   - component: {fileID: 74665905}
   - component: {fileID: 74665904}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5659,7 +5661,7 @@ ParticleSystem:
   m_GameObject: {fileID: 74665902}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -10864,7 +10866,7 @@ GameObject:
   - component: {fileID: 132887460}
   - component: {fileID: 132887462}
   - component: {fileID: 132887461}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10962,7 +10964,7 @@ ParticleSystem:
   m_GameObject: {fileID: 132887459}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -16543,7 +16545,7 @@ GameObject:
   - component: {fileID: 219337029}
   - component: {fileID: 219337031}
   - component: {fileID: 219337030}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16641,7 +16643,7 @@ ParticleSystem:
   m_GameObject: {fileID: 219337028}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -25811,7 +25813,7 @@ GameObject:
   - component: {fileID: 816717629}
   - component: {fileID: 816717631}
   - component: {fileID: 816717630}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25909,7 +25911,7 @@ ParticleSystem:
   m_GameObject: {fileID: 816717628}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -30665,6 +30667,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock
       objectReference: {fileID: 0}
+    - target: {fileID: 4773622029336196902, guid: 9303d72d1970e7149be7e0b8ad18e78d, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4773622029336196923, guid: 9303d72d1970e7149be7e0b8ad18e78d, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -30719,6 +30725,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4773622029336196923, guid: 9303d72d1970e7149be7e0b8ad18e78d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7810171265766543218, guid: 9303d72d1970e7149be7e0b8ad18e78d, type: 3}
+      propertyPath: _cameraEvent
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7810171265766543218, guid: 9303d72d1970e7149be7e0b8ad18e78d, type: 3}
+      propertyPath: _targetCamera
+      value: 
+      objectReference: {fileID: 6584075299172797822}
+    - target: {fileID: 7810171265766543218, guid: 9303d72d1970e7149be7e0b8ad18e78d, type: 3}
+      propertyPath: _ignoreLayerMask
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 7810171265766543218, guid: 9303d72d1970e7149be7e0b8ad18e78d, type: 3}
+      propertyPath: _updateRenderers
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -31247,7 +31269,7 @@ GameObject:
   - component: {fileID: 885751828}
   - component: {fileID: 885751830}
   - component: {fileID: 885751829}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31345,7 +31367,7 @@ ParticleSystem:
   m_GameObject: {fileID: 885751827}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -37015,7 +37037,7 @@ GameObject:
   - component: {fileID: 957118508}
   - component: {fileID: 957118510}
   - component: {fileID: 957118509}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37113,7 +37135,7 @@ ParticleSystem:
   m_GameObject: {fileID: 957118507}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -43599,7 +43621,7 @@ GameObject:
   - component: {fileID: 1091373127}
   - component: {fileID: 1091373129}
   - component: {fileID: 1091373128}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43697,7 +43719,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1091373126}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -48484,7 +48506,7 @@ GameObject:
   - component: {fileID: 1108942417}
   - component: {fileID: 1108942419}
   - component: {fileID: 1108942418}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48582,7 +48604,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1108942416}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -53617,6 +53639,11 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!4 &1125887570 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 203052129366547352, guid: 54235f3a893588a4aaad76316fddcf04, type: 3}
+  m_PrefabInstance: {fileID: 6453156116638062311}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1140032096
 GameObject:
   m_ObjectHideFlags: 0
@@ -54157,7 +54184,7 @@ GameObject:
   - component: {fileID: 1237355080}
   - component: {fileID: 1237355082}
   - component: {fileID: 1237355081}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54255,7 +54282,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1237355079}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -59225,7 +59252,7 @@ GameObject:
   - component: {fileID: 1260541041}
   - component: {fileID: 1260541043}
   - component: {fileID: 1260541042}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59323,7 +59350,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1260541040}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -64512,6 +64539,106 @@ Transform:
   m_Father: {fileID: 1879681509}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1308880730
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1125887570}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.125
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.19432312
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.040394742
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.9568169
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.2123867
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -23
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -205
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+      propertyPath: m_Name
+      value: gimmick_rHand (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: c4950dd2148624f4db788337086a8d01, type: 2}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+--- !u!4 &1308880731 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+  m_PrefabInstance: {fileID: 1308880730}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1308880732 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b7b6f998de689ab4ea3b931365448848, type: 3}
+  m_PrefabInstance: {fileID: 1308880730}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1308880733
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1308880732}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.18567887, y: 0.40887928, z: 0.14965126}
+  m_Center: {x: 0.053738788, y: 0.19296885, z: -0.02442585}
+--- !u!54 &1308880734
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1308880732}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &1312669137
 GameObject:
   m_ObjectHideFlags: 0
@@ -65085,7 +65212,7 @@ GameObject:
   - component: {fileID: 1369190035}
   - component: {fileID: 1369190037}
   - component: {fileID: 1369190036}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65183,7 +65310,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1369190034}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -70001,7 +70128,7 @@ GameObject:
   - component: {fileID: 1372604968}
   - component: {fileID: 1372604970}
   - component: {fileID: 1372604969}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70099,7 +70226,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1372604967}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -75114,7 +75241,7 @@ GameObject:
   - component: {fileID: 1397050549}
   - component: {fileID: 1397050551}
   - component: {fileID: 1397050550}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75212,7 +75339,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1397050548}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -80639,6 +80766,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c03c5126214e824a9760247626d4a05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _successRotation: 0
+  _successAccel: 0
 --- !u!1 &1438756465
 GameObject:
   m_ObjectHideFlags: 0
@@ -81255,7 +81384,7 @@ GameObject:
   - component: {fileID: 1496120692}
   - component: {fileID: 1496120694}
   - component: {fileID: 1496120693}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -81353,7 +81482,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1496120691}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -86140,7 +86269,7 @@ GameObject:
   - component: {fileID: 1500248675}
   - component: {fileID: 1500248677}
   - component: {fileID: 1500248676}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86238,7 +86367,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1500248674}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -91014,6 +91143,36 @@ Transform:
   m_Father: {fileID: 629502538}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1520528442
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1520528443}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1520528443
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1520528442}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: -0.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1308880731}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1521396842
 GameObject:
   m_ObjectHideFlags: 0
@@ -91209,7 +91368,7 @@ GameObject:
   - component: {fileID: 1524169649}
   - component: {fileID: 1524169651}
   - component: {fileID: 1524169650}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91307,7 +91466,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1524169648}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -98444,7 +98603,7 @@ GameObject:
   - component: {fileID: 1731261048}
   - component: {fileID: 1731261050}
   - component: {fileID: 1731261049}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98542,7 +98701,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1731261047}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -103705,7 +103864,7 @@ GameObject:
   - component: {fileID: 1756772659}
   - component: {fileID: 1756772661}
   - component: {fileID: 1756772660}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103803,7 +103962,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1756772658}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -108709,7 +108868,7 @@ GameObject:
   - component: {fileID: 1769126630}
   - component: {fileID: 1769126632}
   - component: {fileID: 1769126631}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108807,7 +108966,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1769126629}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -113777,7 +113936,7 @@ GameObject:
   - component: {fileID: 1804900827}
   - component: {fileID: 1804900829}
   - component: {fileID: 1804900828}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113875,7 +114034,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1804900826}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -118985,7 +119144,7 @@ GameObject:
   - component: {fileID: 1854420011}
   - component: {fileID: 1854420013}
   - component: {fileID: 1854420012}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119083,7 +119242,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1854420010}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -124860,7 +125019,7 @@ GameObject:
   - component: {fileID: 1987937874}
   - component: {fileID: 1987937876}
   - component: {fileID: 1987937875}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124958,7 +125117,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1987937873}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -130225,6 +130384,106 @@ Transform:
   m_Father: {fileID: 599764163}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2035193714
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1125887570}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.125
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.19432312
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.040394742
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.9568169
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.2123867
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -23
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 205
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+      propertyPath: m_Name
+      value: gimmick_lHand (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 53d7afda77f112e4babf02ea31264950, type: 2}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+--- !u!1 &2035193715 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+  m_PrefabInstance: {fileID: 2035193714}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2035193716
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2035193715}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.18117523, y: 0.406909, z: 0.13664487}
+  m_Center: {x: -0.046474457, y: 0.19032049, z: -0.024346605}
+--- !u!54 &2035193717
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2035193715}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
+--- !u!4 &2035193718 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: cfc1b74676e421b43ae61dc953fb3594, type: 3}
+  m_PrefabInstance: {fileID: 2035193714}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2036286404
 GameObject:
   m_ObjectHideFlags: 0
@@ -130236,7 +130495,7 @@ GameObject:
   - component: {fileID: 2036286405}
   - component: {fileID: 2036286407}
   - component: {fileID: 2036286406}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130334,7 +130593,7 @@ ParticleSystem:
   m_GameObject: {fileID: 2036286404}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -136014,7 +136273,7 @@ GameObject:
   - component: {fileID: 2125923244}
   - component: {fileID: 2125923246}
   - component: {fileID: 2125923245}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136112,7 +136371,7 @@ ParticleSystem:
   m_GameObject: {fileID: 2125923243}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -140899,7 +141158,7 @@ GameObject:
   - component: {fileID: 2129713369}
   - component: {fileID: 2129713371}
   - component: {fileID: 2129713370}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140997,7 +141256,7 @@ ParticleSystem:
   m_GameObject: {fileID: 2129713368}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 0.15
+  simulationSpeed: 0.075
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -145924,6 +146183,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FireDirectionalLight
       objectReference: {fileID: 0}
+    - target: {fileID: 2557766816721487268, guid: 57749874a7f3edf458d4772cb4a806f7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2557766816721487269, guid: 57749874a7f3edf458d4772cb4a806f7, type: 3}
       propertyPath: m_RootOrder
       value: 11
@@ -145977,6 +146240,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 203052127356786821, guid: 54235f3a893588a4aaad76316fddcf04, type: 3}
+      propertyPath: leftHandGrabPos
+      value: 
+      objectReference: {fileID: 2035193718}
+    - target: {fileID: 203052127356786821, guid: 54235f3a893588a4aaad76316fddcf04, type: 3}
+      propertyPath: rightHandGrabPos
+      value: 
+      objectReference: {fileID: 1308880731}
+    - target: {fileID: 203052127356786823, guid: 54235f3a893588a4aaad76316fddcf04, type: 3}
+      propertyPath: OutlineLayer.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
     - target: {fileID: 203052127356786824, guid: 54235f3a893588a4aaad76316fddcf04, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -146049,6 +146324,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: -0.694
       objectReference: {fileID: 0}
+    - target: {fileID: 5035883254496008474, guid: 54235f3a893588a4aaad76316fddcf04, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 5092067911957107066, guid: 54235f3a893588a4aaad76316fddcf04, type: 3}
       propertyPath: handGameObject
       value: 
@@ -146065,6 +146344,10 @@ PrefabInstance:
       propertyPath: handGameObject
       value: 
       objectReference: {fileID: 301170333}
+    - target: {fileID: 6765305645053679115, guid: 54235f3a893588a4aaad76316fddcf04, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 8385364009841718547, guid: 54235f3a893588a4aaad76316fddcf04, type: 3}
       propertyPath: m_RenderPostProcessing
       value: 1

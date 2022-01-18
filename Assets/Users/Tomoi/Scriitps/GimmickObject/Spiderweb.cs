@@ -41,7 +41,7 @@ public class Spiderweb : MonoBehaviour
 
           _subject = SpiderwebChecker.Instance.OnColliderEnterHand;
 
-          _subject.Subscribe(CheckHandStatus).AddTo(this);
+          _subject.Where(_=>_Catch).Subscribe(CheckHandStatus).AddTo(this);
      }
 
      private void CheckHandStatus(SpiderwebChecker.ColliderPosition colliderPosition)
@@ -78,6 +78,7 @@ public class Spiderweb : MonoBehaviour
           //UIを非表示にする処理
           _UIinstance.ShowSpiderwebSlider(false);
           //処理
+          PlayerHandController.SetSpiderwebCheckHandActive(false);
           Destroy(this.gameObject);
      }
      public static float GetAfterDecimalPoint(float self )
@@ -89,8 +90,9 @@ public class Spiderweb : MonoBehaviour
      {
           if (canCatch && obj.CompareTag("Player"))
           {
-               _ShakeOffCountInside  = 0;
-               _ShakeOffCountOutside = 0;
+               PlayerHandController.Instance.playerCaughtSpider = true;
+               PlayerHandController.SetSpiderwebCheckHandActive(true);
+
                _Catch                = true;
                _UIinstance.ShowSpiderwebSlider(true);
                _UIinstance.ValueSet(0);

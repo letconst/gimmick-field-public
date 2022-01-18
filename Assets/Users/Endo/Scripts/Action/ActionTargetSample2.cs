@@ -10,6 +10,16 @@ public class ActionTargetSample2 : MonoBehaviour, IActionable
     public void DeAction()
     {
     }
-
+    public bool _isOutline { get; private set; }
     public HandType RequireHand { get; }
+
+    public void ShowOutline()
+    {
+        gameObject.layer = 9;
+    }
+
+    public void HideOutline()
+    {
+        gameObject.layer = 0;
+    }
 }

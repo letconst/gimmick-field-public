@@ -14,12 +14,12 @@ public class Input_Accelerometer_test : MonoBehaviour
                 if(Mathf.Abs(_f3.x) > input_value || Mathf.Abs(_f3.y) > input_value || Mathf.Abs(_f3.z) > input_value)
                     Debug.Log("_R" + _f3);
             }
-            );
+            ).AddTo(this);
         SwitchInputController.Instance.GetLcontllolerAccelerometer.Subscribe(_f3 =>
             {
                 if(Mathf.Abs(_f3.x) > input_value || Mathf.Abs(_f3.y) > input_value || Mathf.Abs(_f3.z) > input_value)
                     Debug.Log("_L"+_f3);
             }
-        );
+        ).AddTo(this);
     }
 }

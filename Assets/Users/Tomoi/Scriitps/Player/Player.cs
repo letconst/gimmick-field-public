@@ -21,23 +21,15 @@ public class Player : MonoBehaviour
     {
         PlayerGameObject = this.gameObject;
         PlayerRb = PlayerGameObject.GetComponent<Rigidbody>();
-        SwitchInputController.Instance.OnClickGrabButtonSubject.Subscribe( _GrabButton =>
-        {
-            //Debug.Log(_GrabButton);
-        });
-        SwitchInputController.Instance.OnClickABXYButtonSubject.Subscribe( _ABXYButton =>
-        {
-            //Debug.Log(_ABXYButton);
-        });
         // FIXME: Where暫定
         SwitchInputController.Instance.OnInputLstickResiveed.Where(_ => canMovement).Subscribe( Vector2 =>
         {
             PlayerAddForce(camera.transform.right * Vector2.x,GenerateZVector3(Vector2.y) );
-        });
+        }).AddTo(this);
         Gamemaneger.Instance.GameOver.Subscribe(_ =>
         {
             Debug.Log("GameOver");
-        });
+        }).AddTo(this);
     }
     //PlayerAddForceに渡すz軸用ののVector3を生成する
     private Vector3 GenerateZVector3(float y)
