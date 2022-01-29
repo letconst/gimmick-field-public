@@ -47,4 +47,9 @@ public interface IActionable
     /// どの手で入力されたときにアクションを実行するか
     /// </summary>
     HandType RequireHand { get; }
+
+    /// <summary>
+    /// 掴める常態かどうかの判定
+    /// </summary>
+    bool isGrab { get; }
 }

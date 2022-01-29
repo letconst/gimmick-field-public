@@ -11,8 +11,10 @@ public class ActionTargetSample1 : MonoBehaviour, IActionable
     {
     }
     public bool _isOutline { get; private set; }
+    public bool isGrab { get;private set; }
     public HandType RequireHand { get; }
     public void ShowOutline(){}
     public void HideOutline(){}
+    
 
 }

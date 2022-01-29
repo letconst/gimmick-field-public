@@ -4,7 +4,7 @@ using System.Security.Cryptography.X509Certificates;
 using UniRx;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : SingletonMonoBehaviour<Player>
 {
     //コードを読みやすくするため
     GameObject  PlayerGameObject;
@@ -14,21 +14,17 @@ public class Player : MonoBehaviour
     [SerializeField]
     GameObject camera;
 
-    // FIXME: 暫定
-    public bool canMovement = true;
-
     void Start()
     {
         PlayerGameObject = this.gameObject;
         PlayerRb = PlayerGameObject.GetComponent<Rigidbody>();
-        // FIXME: Where暫定
-        SwitchInputController.Instance.OnInputLstickResiveed.Where(_ => canMovement).Subscribe( Vector2 =>
+
+        SwitchInputController.Instance.OnInputLstickResiveed
+                             .ObserveOn(Scheduler.MainThreadFixedUpdate)
+                             .Where(_ => Gamemaneger.Instance.State == GameState.Main)
+                             .Subscribe( Vector2 =>
         {
             PlayerAddForce(camera.transform.right * Vector2.x,GenerateZVector3(Vector2.y) );
-        }).AddTo(this);
-        Gamemaneger.Instance.GameOver.Subscribe(_ =>
-        {
-            Debug.Log("GameOver");
         }).AddTo(this);
     }
     //PlayerAddForceに渡すz軸用ののVector3を生成する

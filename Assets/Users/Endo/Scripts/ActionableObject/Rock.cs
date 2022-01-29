@@ -8,11 +8,18 @@ public class Rock : MonoBehaviour, IActionable
     [SerializeField, Header("投げた際の速度の感度"), Range(.1f, 50)]
     private float throwSensitivity;
 
+    [SerializeField, Header("このオブジェクトが与えるダメージ量")]
+    private int damageAmount;
+
     private bool _isHoldByPlayer;
 
     private Rigidbody _selfRig;
     private Collider  _selfCollider;
     private Transform _playerTrf;
+    
+    public  bool           _isOutline  { get; private set; }
+    public  HandType       RequireHand { get; private set; }
+    public bool isGrab { get;private set; }
 
     #region 暫定サンプルコード（Joy-Con入力ラッパークラスができたら差し替え・削除）
 
@@ -26,9 +33,6 @@ public class Rock : MonoBehaviour, IActionable
 
     private nn.util.Float4 _npadQuaternion;
     private Quaternion     _quaternion;
-    public  bool           _isOutline  { get; private set; }
-    public  HandType       RequireHand { get; private set; }
-
     #endregion
 
     private void Start()
@@ -37,6 +41,7 @@ public class Rock : MonoBehaviour, IActionable
         _selfCollider = GetComponent<Collider>();
         _playerTrf    = GameObject.FindWithTag("Player").transform;
 
+        isGrab = true;
         _isOutline  = true;
         RequireHand = HandType.One;
     }
@@ -52,6 +57,15 @@ public class Rock : MonoBehaviour, IActionable
         {
             transform.position = PlayerManager.Instance.PlayerHandTrf.position;
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        var h = collision.collider.GetComponent<IHealth>();
+
+        // 体力を持つオブジェクトに衝突した場合は攻撃を通知
+        // TODO: このままだと当たっただけでダメージが入るので、加速度等で判定を取る
+        h?.OnDamaged(damageAmount, gameObject);
     }
 
     public async void Action()

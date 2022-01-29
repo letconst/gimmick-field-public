@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1285568597741853990}
   - component: {fileID: 1611717647433980917}
   - component: {fileID: 1611717647433980915}
+  - component: {fileID: 5329574539109094249}
   m_Layer: 0
   m_Name: Gimmicfield_3D_Doar
   m_TagString: Untagged
@@ -25,15 +26,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1917567488224954268}
-  m_LocalRotation: {x: 0, y: -0.14845674, z: 0, w: 0.98891896}
-  m_LocalPosition: {x: 74.70734, y: 6.1, z: -78.42367}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children:
   - {fileID: 1951562291375615367}
   - {fileID: 3958345289228727963}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -17.075, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1611717647433980917
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -59,11 +60,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e898184f40895a34b97c882746f6e841, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _successRotation: 0.5
+  _successRotation: 0.4
   _successAccel: 0.1
-  _rangeOpenDoorFully: 180
   _rightDoar: {fileID: 7187190408871654250}
   _leftDoar: {fileID: 6555141810165854317}
+--- !u!95 &5329574539109094249
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1917567488224954268}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 698f001bf3c9db740895433c4611ea8a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6555141810165854317
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,9 +4,12 @@ using UnityEngine.InputSystem.Controls;
 
 public class Doar : MonoBehaviour,IActionable
 {
+    [SerializeField, Header("開いたときにゲームクリアとするか")]
+    private bool isGameClearWhenOpened;
+
     /// <summary>両手で掴んでいる状態</summary>
     private bool isOpen = false;
-    /// <summary>宝箱が空いているかどうか</summary>
+    /// <summary>扉が空いているかどうか</summary>
     private bool isOpened = false;
 
     public bool _isOutline { get; private set; }
@@ -22,46 +25,39 @@ public class Doar : MonoBehaviour,IActionable
     private Quaternion _quaternion;
     private Float4 _float4;
 
-
-    /// <summary>ドアの初期値から開いた際の位置までに移動する距離</summary>
-    [SerializeField, Header("ドアの初期値から開いた際の位置までに移動する距離")] private float _rangeOpenDoorFully = 200f;
-
+    private Animator _animator;
+    //アウトラインを表示するために保持
     [SerializeField] private GameObject _rightDoar;
     [SerializeField] private GameObject _leftDoar;
-    //ドアの初期位置を保持
-    private Vector3 _rightDoarDefaultPosition;
-    private Vector3 _leftDoarDefaultPosition;
-
-    //ドアの開いた位置を保持
-    private Vector3 _rightDoarAfterPosition;
-    private Vector3 _leftDoarAfterPosition;
 
     private float _rightProgressRate = 0f;
     private float _leftProgressRate = 0f;
+
+    private bool isLock = false;
+    private LockInterface _lockInterface = null;
+    public bool isGrab { get;private set; }
+
     void Start()
     {
+        _lockInterface = gameObject.GetComponent<LockInterface>() ?? null;
 
+        _animator = this.gameObject.GetComponent<Animator>();
+        isGrab = true;
         _isOutline = true;
         RequireHand = HandType.Both;
 
-        _rightDoarDefaultPosition = _rightDoar.transform.localPosition;
-        _leftDoarDefaultPosition = _leftDoar.transform.localPosition;
-
-        _rightDoarAfterPosition.Set(_rightDoarDefaultPosition.x + _rangeOpenDoorFully, _rightDoarDefaultPosition.y,
-            _rightDoarDefaultPosition.z);
-        _leftDoarAfterPosition.Set(_leftDoarDefaultPosition.x - _rangeOpenDoorFully, _leftDoarDefaultPosition.y,
-            _leftDoarDefaultPosition.z);
     }
 
     void Update()
     {
-
-        if (isOpen && !isOpened)
+        if (_lockInterface == null || !_lockInterface.isLock)
         {
-            //開く動作
-            DoarBoxOpen();
+            if (isOpen && !isOpened)
+            {
+                //開く動作
+                DoarBoxOpen();
+            }
         }
-
     }
 
     public void Action()
@@ -99,12 +95,8 @@ public class Doar : MonoBehaviour,IActionable
             SwitchInputController.Instance.RJoyConAccel.y >= _successAccel &&
             SwitchInputController.Instance.RJoyConAccel.y <= 0.4f)
         {
-            _progressRate =
-                Mathf.Clamp(Mathf.Abs((_quaternion.eulerAngles.x - _RightJoyCon.eulerAngles.x) / _successRotation), 0f,
-                    100f);
+            _progressRate = Mathf.Clamp(Mathf.Abs((_quaternion.eulerAngles.x - _RightJoyCon.eulerAngles.x) / _successRotation), 0f,100f);
             if (_rightProgressRate <= _progressRate){ _rightProgressRate = _progressRate; }
-            _rightDoar.transform.localPosition = proportionFromPositionCalculation(_rightDoarDefaultPosition,
-                _rightDoarAfterPosition, _rightProgressRate);
         }
 
         SwitchInputController.Instance.LeftJoyConRotaion.GetQuaternion(ref _float4);
@@ -114,18 +106,20 @@ public class Doar : MonoBehaviour,IActionable
             SwitchInputController.Instance.LJoyConAccel.y >= _successAccel &&
             SwitchInputController.Instance.LJoyConAccel.y <= 0.4f)
         {
-            _progressRate =
-                Mathf.Clamp(Mathf.Abs((_quaternion.eulerAngles.x - _LeftJoyCon.eulerAngles.x) / _successRotation), 0f,
-                    100f);
+            _progressRate = Mathf.Clamp(Mathf.Abs((_quaternion.eulerAngles.x - _LeftJoyCon.eulerAngles.x) / _successRotation), 0f,100f);
             if (_leftProgressRate <= _progressRate){ _leftProgressRate = _progressRate;}
-            _leftDoar.transform.localPosition = proportionFromPositionCalculation(_leftDoarDefaultPosition,
-                _leftDoarAfterPosition, _leftProgressRate);
+
         }
         //完全に開いた状態でtrue
         if(_leftProgressRate >= 90 && _rightProgressRate >= 90){isOpened = true;
-            Debug.Log("Opend");
 
-            Gamemaneger.Instance.OnClear();
+            _animator.SetTrigger("OpenDoar");
+            _isOutline                 = false;
+
+            if (isGameClearWhenOpened)
+            {
+                Gamemaneger.Instance.State = GameState.Result;
+            }
         }
     }
 

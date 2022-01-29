@@ -707,7 +707,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpeedParameter: 5
   camera: {fileID: 7963298229771367144}
-  canMovement: 1
 --- !u!135 &7963298228030304757
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -733,7 +732,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea06d9995290464b8862ee9e6328afef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionRange: 2
+  actionRange: 2.5
   isDebug: 0
 --- !u!114 &7963298228030304758
 MonoBehaviour:
@@ -750,10 +749,13 @@ MonoBehaviour:
   leftHand: {fileID: 3004251120296128617}
   leftHandGrabPos: {fileID: 3627294807227453197}
   leftHandHoldPos: {fileID: 3627294806942199717}
+  leftSpiderwebCheckHand: {fileID: 0}
   rightHand: {fileID: 3580646452870643576}
   rightHandGrabPos: {fileID: 3627294806535059237}
   rightHandHoldPos: {fileID: 3627294807237457005}
+  rightSpiderwebCheckHand: {fileID: 0}
   offset: {x: 0, y: 0, z: 1}
+  playerCaughtSpider: 0
 --- !u!1 &7963298228738646819
 GameObject:
   m_ObjectHideFlags: 0
