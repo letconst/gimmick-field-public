@@ -191,9 +191,9 @@ Canvas:
   m_GameObject: {fileID: 2081073}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_RenderMode: 1
+  m_Camera: {fileID: 1959501557864593897}
+  m_PlaneDistance: 0.1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -949,9 +949,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 480509766874873788, guid: cfc1ab1b4095e3a44b09216c38e1768f, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1959501557864593897}
     - target: {fileID: 480509766874873791, guid: cfc1ab1b4095e3a44b09216c38e1768f, type: 3}
       propertyPath: m_Name
       value: ResultCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 480509767152571240, guid: cfc1ab1b4095e3a44b09216c38e1768f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d747b7fc7a351c744bb383995b4ecce4, type: 3}
+    - target: {fileID: 480509767152571241, guid: cfc1ab1b4095e3a44b09216c38e1768f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 480509767152571241, guid: cfc1ab1b4095e3a44b09216c38e1768f, type: 3}
+      propertyPath: m_AspectRatio
+      value: 3.92
       objectReference: {fileID: 0}
     - target: {fileID: 6054839671779356514, guid: cfc1ab1b4095e3a44b09216c38e1768f, type: 3}
       propertyPath: m_AnchorMax.x
@@ -4312,6 +4328,11 @@ PrefabInstance:
 --- !u!4 &1959501557864593896 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7963298229771367147, guid: 976b6c50d0b4fa8418d30e50d876282c, type: 3}
+  m_PrefabInstance: {fileID: 1959501557864593895}
+  m_PrefabAsset: {fileID: 0}
+--- !u!20 &1959501557864593897 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 7963298229771367146, guid: 976b6c50d0b4fa8418d30e50d876282c, type: 3}
   m_PrefabInstance: {fileID: 1959501557864593895}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2557766817776485736

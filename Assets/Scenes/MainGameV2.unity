@@ -1397,9 +1397,9 @@ Canvas:
   m_GameObject: {fileID: 623720319}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_RenderMode: 1
+  m_Camera: {fileID: 1472302601}
+  m_PlaneDistance: 0.1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -3007,6 +3007,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49c627afe4d83a34c900346e8d5c9a07, type: 3}
+--- !u!20 &1472302601 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 7963298229771367146, guid: 976b6c50d0b4fa8418d30e50d876282c, type: 3}
+  m_PrefabInstance: {fileID: 1498512917}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1489918441 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8491898563789933980, guid: 3cf832d0c9ae856488b7f8391bc94c21, type: 3}
@@ -4235,6 +4240,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 480509766874873788, guid: cfc1ab1b4095e3a44b09216c38e1768f, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1472302601}
     - target: {fileID: 480509766874873791, guid: cfc1ab1b4095e3a44b09216c38e1768f, type: 3}
       propertyPath: m_Name
       value: ResultCanvas
@@ -4249,10 +4258,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6054839671779356514, guid: cfc1ab1b4095e3a44b09216c38e1768f, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6054839671779356514, guid: cfc1ab1b4095e3a44b09216c38e1768f, type: 3}
-      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -4373,6 +4378,10 @@ PrefabInstance:
       propertyPath: lockDoar
       value: 
       objectReference: {fileID: 215618131}
+    - target: {fileID: 3032573108552846416, guid: 8a8d0a531082b9d438b47e92ab936824, type: 3}
+      propertyPath: maxHealth
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3287456555079609277, guid: 8a8d0a531082b9d438b47e92ab936824, type: 3}
       propertyPath: m_RootOrder
       value: 42
