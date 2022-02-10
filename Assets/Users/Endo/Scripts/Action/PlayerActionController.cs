@@ -18,13 +18,13 @@ public class PlayerActionController : MonoBehaviour
     private SphereCollider _selfCollider;
 
     /// <summary>視点を合わせているオブジェクト</summary>
-    private IActionable _focusObject;
+    public IActionable FocusObject { get; private set; }
 
     /// <summary>左手でアクション中のオブジェクト</summary>
-    private IActionable _leftHoldObj;
+    public IActionable LeftHoldObj { get; private set; }
 
     /// <summary>右手でアクション中のオブジェクト</summary>
-    private IActionable _rightHoldObj;
+    public IActionable RightHoldObj { get; private set; }
 
     /// <summary>視点を合わせているオブジェクト</summary>
     public GameObject _focusObjectGameObject{private set; get; }
@@ -46,10 +46,10 @@ public class PlayerActionController : MonoBehaviour
     private bool pushing_simultaneous_L = false;
 
     /// <summary>左手になにか持っているか</summary>
-    public bool IsHoldInLeft => _leftHoldObj != null;
+    public bool IsHoldInLeft => LeftHoldObj != null;
 
     /// <summary>右手になにか持っているか</summary>
-    public bool IsHoldInRight => _rightHoldObj != null;
+    public bool IsHoldInRight => RightHoldObj != null;
 
     ///<summary>アウトラインのレイヤーをintで指定</summary>
     private int OutlineLayer = 9;
@@ -128,6 +128,9 @@ public class PlayerActionController : MonoBehaviour
     /// <param name="button"></param>
     private async void OnPressTrigger(SwitchInputController.GrabButton button)
     {
+        // プレイヤーがクモの巣に引っかかってる際はアクションしない
+        if (PlayerHandController.Instance.playerCaughtSpider) return;
+
         SwitchInputController.Status _ZRStatus = button.ZR.Status;
         SwitchInputController.Status _ZLStatus = button.ZL.Status;
 
@@ -135,7 +138,7 @@ public class PlayerActionController : MonoBehaviour
         pushing_simultaneous_L = _ZLStatus == SwitchInputController.Status.GetButtonDown;
 
         // アクション対象がない場合はスカアニメーション
-        if (_focusObject == null)
+        if (FocusObject == null)
         {
             if (_ZRStatus == SwitchInputController.Status.GetButtonDown)
             {
@@ -153,11 +156,11 @@ public class PlayerActionController : MonoBehaviour
         }
 
         // 視点の先のオブジェクトを、要求の持ち方に応じて処理
-        switch (_focusObject?.RequireHand)
+        switch (FocusObject?.RequireHand)
         {
             case HandType.Undefined:
             {
-                Debug.LogError($"持ち方が定義されていません: {_focusObject}");
+                Debug.LogError($"持ち方が定義されていません: {FocusObject}");
 
                 break;
             }
@@ -167,12 +170,12 @@ public class PlayerActionController : MonoBehaviour
                 // 左トリガーのみ押下および左手未所持のときに処理
                 if (!(pushing_simultaneous_L &&
                       pushing_simultaneous_R &&
-                      _leftHoldObj == null)) break;
+                      LeftHoldObj == null)) break;
 
                 // 左手に持たせてアクション実行
-                _leftHoldObj = _focusObject;
+                LeftHoldObj = FocusObject;
                 _leftHoldGameObject = _focusObjectGameObject;
-                _leftHoldObj?.Action(HandType.Left);
+                LeftHoldObj?.Action(HandType.Left);
 
                 break;
             }
@@ -182,12 +185,12 @@ public class PlayerActionController : MonoBehaviour
                 // 右トリガーのみ押下および右手未所持のときに処理
                 if (!(pushing_simultaneous_R  &&
                       !pushing_simultaneous_L &&
-                      _rightHoldObj == null)) break;
+                      RightHoldObj == null)) break;
 
                 // 右手に持たせてアクション実行
-                _rightHoldObj = _focusObject;
+                RightHoldObj = FocusObject;
                 _rightHoldGameObject = _focusObjectGameObject;
-                _rightHoldObj?.Action(HandType.Right);
+                RightHoldObj?.Action(HandType.Right);
 
                 break;
             }
@@ -197,19 +200,19 @@ public class PlayerActionController : MonoBehaviour
                 // トリガー押下時のみ処理
                 if (!pushing_simultaneous_L && !pushing_simultaneous_R) break;
 
-                if (pushing_simultaneous_L && !pushing_simultaneous_R && _leftHoldObj == null)
+                if (pushing_simultaneous_L && !pushing_simultaneous_R && LeftHoldObj == null)
                 {
-                    _leftHoldObj = _focusObject;
+                    LeftHoldObj = FocusObject;
                     _leftHoldGameObject = _focusObjectGameObject;
-                    _leftHoldObj?.Action(HandType.Left);
+                    LeftHoldObj?.Action(HandType.Left);
                 }
                 else if (pushing_simultaneous_R  &&
                          !pushing_simultaneous_L &&
-                         _rightHoldObj == null)
+                         RightHoldObj == null)
                 {
-                    _rightHoldObj = _focusObject;
+                    RightHoldObj = FocusObject;
                     _rightHoldGameObject = _focusObjectGameObject;
-                    _rightHoldObj?.Action(HandType.Right);
+                    RightHoldObj?.Action(HandType.Right);
                 }
 
                 break;
@@ -225,9 +228,9 @@ public class PlayerActionController : MonoBehaviour
                     _ZLStatus == SwitchInputController.Status.GetButton)
                 {
                     // 両手に持たせてアクション実行
-                    _leftHoldObj = _rightHoldObj = _focusObject;
+                    LeftHoldObj = RightHoldObj = FocusObject;
                     _leftHoldGameObject = _rightHoldGameObject = _focusObjectGameObject;
-                    _focusObject?.Action(HandType.Both);
+                    FocusObject?.Action(HandType.Both);
                 }
 
                 break;
@@ -237,15 +240,15 @@ public class PlayerActionController : MonoBehaviour
         // トリガー開放時にオブジェクトを持ってるなら開放処理実行
         if (_ZLStatus == SwitchInputController.Status.GetButtonUp)
         {
-            _leftHoldObj?.DeAction(HandType.Left);
-            _leftHoldObj = null;
+            LeftHoldObj?.DeAction(HandType.Left);
+            LeftHoldObj = null;
             _leftHoldGameObject = null;
         }
 
         if (_ZRStatus == SwitchInputController.Status.GetButtonUp)
         {
-            _rightHoldObj?.DeAction(HandType.Right);
-            _rightHoldObj = null;
+            RightHoldObj?.DeAction(HandType.Right);
+            RightHoldObj = null;
             _rightHoldGameObject = null;
         }
     }
@@ -273,22 +276,22 @@ public class PlayerActionController : MonoBehaviour
             GameObject actObj = hit.collider.gameObject;
             if (act == null)
             {
-                _focusObject = null;
+                FocusObject = null;
                 _focusObjectGameObject = null;
 
                 return false;
             }
 
-            _focusObject = act;
+            FocusObject = act;
             _focusObjectGameObject = actObj;
 
             //アウトラインを表示するか判定
 
             //このあたりでアウトラインを表示する
-            if (_focusObject._isOutline)
+            if (FocusObject._isOutline)
             {
                 //レイヤーをアウトラインに切り替えてアウトラインを表示する
-                _focusObject.ShowOutline();
+                FocusObject.ShowOutline();
 
                 foreach (ShowOutline _show in _showOutlines)
                 {
@@ -304,7 +307,7 @@ public class PlayerActionController : MonoBehaviour
 
                 ShowOutline _s = new ShowOutline();
                 _s._gameObject             = hit.collider.gameObject;
-                _s._actionable             = _focusObject;
+                _s._actionable             = FocusObject;
                 _s._checkShowOutlineObject = true;
                 _showOutlines.Add(_s);
             }
@@ -312,7 +315,7 @@ public class PlayerActionController : MonoBehaviour
             return true;
         }
 
-        _focusObject = null;
+        FocusObject = null;
         _focusObjectGameObject = null;
 
         return false;

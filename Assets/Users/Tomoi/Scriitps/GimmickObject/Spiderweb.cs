@@ -97,7 +97,8 @@ public class Spiderweb : MonoBehaviour
           PlayerHandController.SetSpiderwebCheckHandActive(false,HandType.Both,true);
           // Destroy(this.gameObject);
 
-          canCatch = false;
+          canCatch                                         = false;
+          PlayerHandController.Instance.playerCaughtSpider = false;
 
           // 巣を透明に
           spider.SetWebAlpha(0);
@@ -127,9 +128,12 @@ public class Spiderweb : MonoBehaviour
                }
                else
                {
-
                     PlayerHandController.Instance.playerCaughtSpider = true;
                     PlayerHandController.SetSpiderwebCheckHandActive(true, HandType.Both, true);
+
+                    // 手で持っているものは落とさせる
+                    _playerAction.LeftHoldObj?.DeAction(HandType.Left);
+                    _playerAction.RightHoldObj?.DeAction(HandType.Right);
 
                     _Catch = true;
                     _UIinstance.ShowSpiderwebSlider(true);
