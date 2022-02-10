@@ -4,6 +4,7 @@ using UniRx;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(Animator))]
 public class Guardian : EnemyBase
 {
     [SerializeField, Header("この守護者を倒すことで開けるようになる扉")]
@@ -26,11 +27,17 @@ public class Guardian : EnemyBase
 
     private static Guardian _instance;
 
-    private Player _player;
-
     private GuardianState _selfState;
 
+    private Animator _selfAnim;
+
+    private Player _player;
+
     public GuardianStonePool stonePool;
+
+    private static readonly int Attack  = Animator.StringToHash("Attack");
+    private static readonly int Damaged = Animator.StringToHash("Damaged");
+    private static readonly int Death   = Animator.StringToHash("Death");
 
     public static Guardian Instance
     {
@@ -48,7 +55,8 @@ public class Guardian : EnemyBase
     {
         Idle,
         Stun,
-        Attacking
+        Attacking,
+        Dead
     }
 
     private void Awake()
@@ -58,12 +66,13 @@ public class Guardian : EnemyBase
         stonePool = new GuardianStonePool(stonePrefabs);
     }
 
-    protected override async void Start()
+    protected override void Start()
     {
         base.Start();
 
         _player    = Player.Instance;
         _selfState = GuardianState.Idle;
+        _selfAnim  = GetComponent<Animator>();
 
         this.ObserveEveryValueChanged(x => x._selfState).Subscribe(OnStateChanged).AddTo(this);
     }
@@ -100,12 +109,18 @@ public class Guardian : EnemyBase
     /// <param name="state">変更後のState</param>
     private async void OnStateChanged(GuardianState state)
     {
+        // メインゲームステート以外では処理しない
+        if (Gamemaneger.Instance.State != GameState.Main) return;
+
         switch (state)
         {
             case GuardianState.Idle:
             {
                 // Idleから数秒後に攻撃（仮）
                 await UniTask.Delay(TimeSpan.FromSeconds(Random.Range(minAttackInterval, maxAttackInterval)));
+
+                // 待機中にステートが変わってたら攻撃しない
+                if (_selfState != GuardianState.Idle) break;
 
                 _selfState = GuardianState.Attacking;
 
@@ -117,9 +132,31 @@ public class Guardian : EnemyBase
 
             case GuardianState.Attacking:
             {
+                _selfAnim.SetTriggerOneFrame(Attack);
+
                 Attack1();
 
                 _selfState = GuardianState.Idle;
+
+                break;
+            }
+
+            case GuardianState.Dead:
+            {
+                // トリガーとする扉があればロック解除
+                if (lockDoar)
+                {
+                    lockDoar.unLock(true);
+                }
+
+                // 死亡モーション再生
+                _selfAnim.SetTrigger(Death);
+
+                // アニメーション再生終了まで待機
+                await _selfAnim.WaitUntilAnimationNameIs("Death");
+                await _selfAnim.WaitForCurrentAnimation();
+
+                Destroy(gameObject);
 
                 break;
             }
@@ -146,7 +183,7 @@ public class Guardian : EnemyBase
         Vector3 right   = transform.right;
 
         // 各方向への生成位置
-        Vector3 y         = transform.up * 2;
+        Vector3 y         = transform.up;
         Vector3 stonePosF = selfPos                                    + forward * stoneGeneratedDistance + y;
         Vector3 stonePosL = selfPos - right * stoneGeneratedDistance   + y;
         Vector3 stonePosR = selfPos                                    + right * stoneGeneratedDistance + y;
@@ -173,19 +210,21 @@ public class Guardian : EnemyBase
 
     public override void OnDamaged(int damageAmount, GameObject attackedObject)
     {
+        // 死亡時は処理しない
+        if (_selfState == GuardianState.Dead) return;
+
         DecreaseHealth(damageAmount);
 
         // 死亡時
         if (IsDead)
         {
-            // トリガーとする扉があればロック解除
-            if (lockDoar)
-            {
-                lockDoar.unLock(true);
-            }
-
-            // TODO: エフェクトなど
-            Destroy(gameObject);
+            _selfState = GuardianState.Dead;
+        }
+        // 通常ダメージ時
+        else
+        {
+            // 被弾モーション再生
+            _selfAnim.SetTriggerOneFrame(Damaged);
         }
     }
 }

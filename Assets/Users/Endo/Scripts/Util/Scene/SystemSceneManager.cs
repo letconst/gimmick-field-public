@@ -14,6 +14,15 @@ public class SystemSceneManager : MonoBehaviour
     public static bool IsLoading { get; private set; }
 
     /// <summary>
+    /// 現在のシーン名を取得する
+    /// </summary>
+    /// <returns>現在のシーン名</returns>
+    public static string GetCurrentSceneName()
+    {
+        return UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+    }
+
+    /// <summary>
     /// シーンを読み込む
     /// </summary>
     /// <param name="sceneName">読み込むシーン名</param>

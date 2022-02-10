@@ -4,16 +4,16 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class SoundManager : SingletonMonoBehaviour<SoundManager>
+public partial class SoundManager : SingletonMonoBehaviour<SoundManager>
 {
     [SerializeField, Header("UI用SEのチャンネル数（同時に鳴らせる数）")]
     private int UISoundChannel;
 
-    private static bool _isInitialized;
-
-    private static Vector3 _selfPos;
+    [SerializeField, Header("プーリング用のAudioSource")]
+    private AudioSource sourceForPool;
 
     private static AudioSource   _musicSource;
+    private static AudioSource[] _soundSources;
     private static AudioSource[] _UISoundSources;
 
     private static Dictionary<int, Audio> _musicsAudio;
@@ -21,14 +21,26 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     private static Dictionary<int, Audio> _UISoundsAudio;
 
     private static Dictionary<int, AudioClip> _musicClips;
+    private static Dictionary<int, AudioClip> _soundClips;
+    private static Dictionary<int, AudioClip> _UISoundClips;
+
+    public static bool IsInitialized { get; private set; }
+
+    public static SoundObjectPool SoundPool { get; private set; }
 
     protected override async void Awake()
     {
         base.Awake();
 
-        _selfPos = transform.position;
-
         await Init();
+    }
+
+    private void Update()
+    {
+        // 各種登録AudioのUpdate処理を実行
+        UpdateAudio(_musicsAudio);
+        UpdateAudio(_soundsAudio);
+        UpdateAudio(_UISoundsAudio);
     }
 
     /// <summary>
@@ -36,7 +48,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     /// </summary>
     private static async UniTask Init()
     {
-        if (_isInitialized) return;
+        if (IsInitialized) return;
 
         _musicsAudio   = new Dictionary<int, Audio>();
         _soundsAudio   = new Dictionary<int, Audio>();
@@ -44,287 +56,164 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         // 各種AudioSource生成
         _musicSource    = AddAudioSourceComponent();
+        _soundSources   = new AudioSource[Instance.UISoundChannel];
         _UISoundSources = new AudioSource[Instance.UISoundChannel];
+        // SEをプーリングさせるようにしたため、コメントアウト
+        // for (int i = 0; i < Instance.UISoundChannel; i++)
+        // {
+        //     _soundSources[i]   = AddAudioSourceComponent();
+        //     _UISoundSources[i] = AddAudioSourceComponent();
+        // }
 
-        for (int i = 0; i < Instance.UISoundChannel; i++)
-        {
-            _UISoundSources[i] = AddAudioSourceComponent();
-        }
+        SoundPool = new SoundObjectPool(Instance.sourceForPool);
 
         DontDestroyOnLoad(Instance);
 
-        _musicClips = new Dictionary<int, AudioClip>();
+        _musicClips   = new Dictionary<int, AudioClip>();
+        _soundClips   = new Dictionary<int, AudioClip>();
+        _UISoundClips = new Dictionary<int, AudioClip>();
 
         // サウンドファイル読み込み
-        // TODO: SEも読み込む
-        Array musicDef = Enum.GetValues(typeof(MusicDef));
+        Array musicDef   = Enum.GetValues(typeof(MusicDef));
+        Array soundDef   = Enum.GetValues(typeof(SoundDef));
+        Array uiSoundDef = Enum.GetValues(typeof(UISoundDef));
 
         for (int i = 0; i < musicDef.Length; i++)
         {
-            object def  = musicDef.GetValue(i);
-            var    clip = await Addressables.LoadAssetAsync<AudioClip>(def.ToString());
-
-            _musicClips.Add((int) def, clip);
+            await LoadAudio(musicDef, i, _musicClips);
         }
 
-        _isInitialized = true;
+        for (int i = 0; i < soundDef.Length; i++)
+        {
+            await LoadAudio(soundDef, i, _soundClips);
+        }
+
+        for (int i = 0; i < uiSoundDef.Length; i++)
+        {
+            await LoadAudio(uiSoundDef, i, _UISoundClips);
+        }
+
+        IsInitialized = true;
 
         // 自身にAudioSourceを新規アタッチする
         AudioSource AddAudioSourceComponent()
         {
             return Instance.gameObject.AddComponent<AudioSource>();
         }
-    }
 
-    private static Dictionary<int, Audio> GetAudioDict(Audio.AudioType type)
-    {
-        return type switch
+        // 指定のサウンドデータを読み込む
+        async UniTask LoadAudio(Array audioDef, int index, IDictionary<int, AudioClip> audioClips)
         {
-            Audio.AudioType.Music   => _musicsAudio,
-            Audio.AudioType.Sound   => _soundsAudio,
-            Audio.AudioType.UISound => _UISoundsAudio,
-            _                       => null
-        };
-    }
+            object def  = audioDef.GetValue(index);
+            var    clip = await Addressables.LoadAssetAsync<AudioClip>(def.ToString());
 
-    #region 取得系メソッド
-
-    /// <summary>
-    /// 音をIDから取得する。どの種類のものか (BGMなのか等) がわかっている場合は専用メソッドの利用を推奨。
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public static Audio GetAudio(int id)
-    {
-        Audio audio = GetMusicAudio(id);
-
-        if (audio != null)
-        {
-            return audio;
+            audioClips.Add((int) def, clip);
         }
+    }
 
-        audio = GetSoundAudio(id);
+    /// <summary>
+    /// 登録されたAudioのUpdate処理を呼ぶ
+    /// </summary>
+    /// <param name="audioDict">対象のAudio dict</param>
+    private static void UpdateAudio(Dictionary<int, Audio> audioDict)
+    {
+        List<int> keys = new List<int>(audioDict.Keys);
 
-        if (audio != null)
+        foreach (int id in keys)
         {
-            return audio;
+            Audio audio = audioDict[id];
+            audio.Update();
+
+            // サウンドが未使用状態になったらプールに返す
+            if (!audio.IsPlaying && !audio.IsPaused)
+            {
+                // AudioSource情報をリセット
+                audio.Reset();
+
+                // 自身にアタッチされている場合は返さない
+                if (!IsSelfAudioSource(audio.AudioSource) && audio.Position != null)
+                {
+                    SoundPool.Return(audio.AudioSource);
+                }
+
+                audioDict.Remove(id);
+            }
         }
-
-        audio = GetUISoundAudio(id);
-
-        return audio;
     }
 
     /// <summary>
-    /// BGMをIDから取得する
+    /// BGMを初期化する
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public static Audio GetMusicAudio(int id)
+    /// <param name="target">再生するBGMのenumインデックス</param>
+    /// <param name="volume">音量</param>
+    /// <param name="isLoop">ループするか</param>
+    /// <param name="position">再生する位置</param>
+    /// <returns>サウンドID</returns>
+    private static int PrepareMusic(int target, float volume, bool isLoop, Vector3? position)
     {
-        return GetAudio(Audio.AudioType.Music, id);
+        return PrepareAudio(Audio.AudioType.Music, target, volume, isLoop, position);
     }
 
     /// <summary>
-    /// SEをIDから取得する
+    /// SEを初期化する
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public static Audio GetSoundAudio(int id)
+    /// <param name="target">再生するSEのenumインデックス</param>
+    /// <param name="volume">音量</param>
+    /// <param name="isLoop">ループするか</param>
+    /// <param name="position">再生する位置</param>
+    /// <returns>サウンドID</returns>
+    private static int PrepareSound(int target, float volume, bool isLoop, Vector3? position)
     {
-        return GetAudio(Audio.AudioType.Sound, id);
+        return PrepareAudio(Audio.AudioType.Sound, target, volume, isLoop, position);
     }
 
     /// <summary>
-    /// UI用SEをIDから取得する
+    /// UI用SEを初期化する
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public static Audio GetUISoundAudio(int id)
+    /// <param name="target">再生するUI用SEのenumインデックス</param>
+    /// <param name="volume">音量</param>
+    /// <returns>サウンドID</returns>
+    private static int PrepareUISound(int target, float volume)
     {
-        return GetAudio(Audio.AudioType.UISound, id);
+        return PrepareAudio(Audio.AudioType.UISound, target, volume, false, null);
     }
 
     /// <summary>
-    /// Audioを取得する
+    /// サウンドを初期化する
     /// </summary>
-    /// <param name="type">取得する音の種類</param>
-    /// <param name="id">取得する音のID</param>
-    /// <returns>Audio</returns>
-    public static Audio GetAudio(Audio.AudioType type, int id)
-    {
-        Dictionary<int, Audio> audioDict = GetAudioDict(type);
-
-        // 辞書がなければnullを返す（念の為）
-        if (audioDict == null) return null;
-
-        if (audioDict.ContainsKey(id))
-        {
-            return audioDict[id];
-        }
-
-        return null;
-    }
-
-    #endregion
-
-    private static int PrepareMusic(int target, float volume, bool isLoop)
-    {
-        return PrepareAudio(Audio.AudioType.Music, target, volume, isLoop, _selfPos);
-    }
-
-    private static int PrepareAudio(Audio.AudioType type, int target, float volume, bool isLoop, Vector3 position)
+    /// <param name="type">再生するサウンドの種類</param>
+    /// <param name="target">再生するサウンドデータのenumインデックス</param>
+    /// <param name="volume">音量</param>
+    /// <param name="isLoop">ループするか</param>
+    /// <param name="position">再生位置</param>
+    /// <returns>サウンドID</returns>
+    private static int PrepareAudio(Audio.AudioType type, int target, float volume, bool isLoop, Vector3? position)
     {
         AudioClip clip = type switch
         {
             Audio.AudioType.Music   => _musicClips[target],
-            Audio.AudioType.Sound   => null,
-            Audio.AudioType.UISound => null
+            Audio.AudioType.Sound   => _soundClips[target],
+            Audio.AudioType.UISound => _UISoundClips[target]
         };
 
-        Audio audio = type switch
+        AudioSource targetSource = type switch
         {
-            Audio.AudioType.Music   => new Audio(type, _musicSource, clip, volume, isLoop, position),
-            Audio.AudioType.Sound   => null,
-            Audio.AudioType.UISound => null
+            Audio.AudioType.Music   => _musicSource,
+            Audio.AudioType.Sound   => SoundPool.Rent(),
+            Audio.AudioType.UISound => SoundPool.Rent()
         };
 
-        _musicsAudio.Add(audio.ID, audio);
+        var audio = new Audio(type, targetSource, clip, volume, isLoop, position);
+
+        Dictionary<int, Audio> targetDict = type switch
+        {
+            Audio.AudioType.Music   => _musicsAudio,
+            Audio.AudioType.Sound   => _soundsAudio,
+            Audio.AudioType.UISound => _UISoundsAudio,
+        };
+
+        targetDict.Add(audio.ID, audio);
 
         return audio.ID;
     }
-
-    #region 再生系メソッド
-
-    /// <summary>
-    /// BGMを再生する
-    /// </summary>
-    /// <param name="target">再生するBGM</param>
-    public static void PlayMusic(MusicDef target)
-    {
-    }
-
-    /// <summary>
-    /// BGMを再生する
-    /// </summary>
-    /// <param name="target">再生するBGM</param>
-    /// <param name="volume">音量</param>
-    public static int PlayMusic(MusicDef target, float volume)
-    {
-        return PlayAudio(Audio.AudioType.Music, (int) target, volume, false, _selfPos);
-    }
-
-    /// <summary>
-    /// BGMを再生する
-    /// </summary>
-    /// <param name="target">再生するBGM</param>
-    /// <param name="volume">音量</param>
-    /// <param name="isLoop">ループするか</param>
-    public static int PlayMusic(MusicDef target, float volume, bool isLoop)
-    {
-        return PlayAudio(Audio.AudioType.Music, (int) target, volume, isLoop, _selfPos);
-    }
-
-    /// <summary>
-    /// BGMを再生する
-    /// </summary>
-    /// <param name="target">再生するBGM</param>
-    /// <param name="volume">音量</param>
-    /// <param name="isLoop">ループするか</param>
-    /// <param name="position">再生する位置</param>
-    public static void PlayMusic(MusicDef target, float volume, bool isLoop, Vector3 position)
-    {
-    }
-
-    /// <summary>
-    /// SEを再生する
-    /// </summary>
-    /// <param name="target">再生するSE</param>
-    public static void PlaySound(SoundDef target)
-    {
-    }
-
-    /// <summary>
-    /// SEを再生する
-    /// </summary>
-    /// <param name="target">再生するSE</param>
-    /// <param name="volume">音量</param>
-    public static void PlaySound(SoundDef target, float volume)
-    {
-    }
-
-    /// <summary>
-    /// SEを再生する
-    /// </summary>
-    /// <param name="target">再生するSE</param>
-    /// <param name="volume">音量</param>
-    /// <param name="isLoop">ループするか</param>
-    public static void PlaySound(SoundDef target, float volume, bool isLoop)
-    {
-    }
-
-    /// <summary>
-    /// SEを再生する
-    /// </summary>
-    /// <param name="target">再生するSE</param>
-    /// <param name="volume">音量</param>
-    /// <param name="isLoop">ループするか</param>
-    /// <param name="position">再生する位置</param>
-    public static void PlaySound(SoundDef target, float volume, bool isLoop, Vector3 position)
-    {
-    }
-
-    /// <summary>
-    /// UI用のSEを再生する
-    /// </summary>
-    /// <param name="target">再生するUI SE</param>
-    public static void PlayUISound(UISoundDef target)
-    {
-    }
-
-    /// <summary>
-    /// UI用のSEを再生する
-    /// </summary>
-    /// <param name="target">再生するUI SE</param>
-    /// <param name="volume">音量</param>
-    public static void PlayUISound(UISoundDef target, float volume)
-    {
-    }
-
-    public static int PlayAudio(Audio.AudioType type, int target, float volume, bool isLoop, Vector3 position)
-    {
-        int id = -1;
-
-        switch (type)
-        {
-            case Audio.AudioType.Music:
-            {
-                id = PrepareMusic(target, volume, isLoop);
-                GetMusicAudio(id).Play();
-
-                break;
-            }
-
-            case Audio.AudioType.Sound:
-                break;
-
-            case Audio.AudioType.UISound:
-                break;
-
-            default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-        }
-
-        return id;
-    }
-
-    /// <summary>
-    /// すべての音を停止する
-    /// </summary>
-    public static void StopAll()
-    {
-        _musicSource.Stop();
-    }
-
-    #endregion
 }

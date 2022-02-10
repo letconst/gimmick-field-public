@@ -23,17 +23,22 @@ public class Spider : EnemyBase
     [SerializeField]
     private Texture webTex;
 
+    [SerializeField, Header("巣を作り始めるプレイヤーとの距離")]
+    private float distanceFromPlayerStartingWeaving;
+
     private Animator     _animator;
     private MeshRenderer _renderer;
     private Material     _webMaterial;
 
-    private SpiderState _state;
+    public SpiderState state;
 
     private float _totalWeaveDistance;
 
     private readonly List<Vector3> _passagePoints = new List<Vector3>();
 
     private const int WallLayer = 1 << 7;
+
+    private Player _player;
 
     private static readonly int IsMove     = Animator.StringToHash("IsMove");
     private static readonly int SPropAlpha = Shader.PropertyToID("Vector1_a3aa0b61c05943b686b6d48e9f569c75");
@@ -54,6 +59,7 @@ public class Spider : EnemyBase
     private void Start()
     {
         _animator = GetComponent<Animator>();
+        _player   = Player.Instance;
 
         if (web)
         {
@@ -68,7 +74,7 @@ public class Spider : EnemyBase
 
         Init();
 
-        this.ObserveEveryValueChanged(x => x._state)
+        this.ObserveEveryValueChanged(x => x.state)
             .Subscribe(OnStateChanged)
             .AddTo(this);
     }
@@ -83,9 +89,16 @@ public class Spider : EnemyBase
 
     private void Update()
     {
-        switch (_state)
+        switch (state)
         {
             case SpiderState.Idle:
+                float distanceFromPlayer = Vector3.Distance(_player.transform.position, transform.position);
+
+                if (distanceFromPlayer < distanceFromPlayerStartingWeaving)
+                {
+                    state = SpiderState.Weaving;
+                }
+
                 break;
 
             case SpiderState.RandomMoving:
@@ -126,7 +139,7 @@ public class Spider : EnemyBase
 
         CalculatePassagePoints(pattern);
 
-        _state = SpiderState.Weaving;
+        state = SpiderState.Idle;
     }
 
     /// <summary>
@@ -282,10 +295,7 @@ public class Spider : EnemyBase
                 oldPos             =  transform.position;
 
                 // 巣のマテリアルのアルファ値に透明度を進捗率で反映
-                if (_renderer)
-                {
-                    _renderer.material.SetFloat(SPropAlpha, movedDistance / _totalWeaveDistance);
-                }
+                SetWebAlpha(movedDistance / _totalWeaveDistance);
 
                 await UniTask.Yield(PlayerLoopTiming.Update);
             }
@@ -316,7 +326,7 @@ public class Spider : EnemyBase
         web.canCatch = true;
 
         // 移動完了後はランダム移動に設定
-        _state = SpiderState.RandomMoving;
+        state = SpiderState.RandomMoving;
     }
 
     /// <summary>
@@ -330,4 +340,15 @@ public class Spider : EnemyBase
     }
 
     #endregion
+
+    /// <summary>
+    /// 巣のアルファ値を設定する
+    /// </summary>
+    /// <param name="alpha">アルファ値 (0-1)</param>
+    public void SetWebAlpha(float alpha)
+    {
+        if (!_renderer) return;
+
+        _renderer.material.SetFloat(SPropAlpha, alpha);
+    }
 }

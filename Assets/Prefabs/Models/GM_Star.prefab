@@ -126,4 +126,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55dc3adf9db42b34dabc513232695428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throwSensitivity: 5
+  throwSensitivity: 3
+  damageAmount: 1
+  takeDamageSpeedThreshold: 3

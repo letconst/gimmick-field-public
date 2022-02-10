@@ -44,3 +44,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UISoundChannel: 3
+  sourceForPool: {fileID: 7242296925487129303, guid: 18af02f2b1abf1f49bc81d1e615be968, type: 3}

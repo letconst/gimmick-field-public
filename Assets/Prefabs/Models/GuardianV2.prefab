@@ -1386,7 +1386,7 @@ Animator:
   m_GameObject: {fileID: 2798060268007780615}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 182d6a73c26b7d44fbec917d77ee71f2, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 125e2cf5ba74e6540a9edd3b8b024524, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -1429,8 +1429,8 @@ MonoBehaviour:
   - {fileID: 6113261847332637045, guid: 1af9ecdfb0bd98b4d8a6acebe334cf71, type: 3}
   stoneGeneratedDistance: 1.5
   stoneAttackSpeed: 10
-  minAttackInterval: 5
-  maxAttackInterval: 10
+  minAttackInterval: 2
+  maxAttackInterval: 3
 --- !u!1 &2847224705343949199
 GameObject:
   m_ObjectHideFlags: 0

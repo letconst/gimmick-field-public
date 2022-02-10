@@ -14,6 +14,9 @@ public class Player : SingletonMonoBehaviour<Player>
     [SerializeField]
     GameObject camera;
 
+    [HideInInspector]
+    public float SpeedBuff = 1.0f;
+
     void Start()
     {
         PlayerGameObject = this.gameObject;
@@ -37,6 +40,6 @@ public class Player : SingletonMonoBehaviour<Player>
     }
     public void PlayerAddForce(Vector3 x, Vector3 z)
     {
-        PlayerRb.velocity = x * SpeedParameter + z * SpeedParameter;
+        PlayerRb.velocity = x * SpeedParameter * SpeedBuff + z * SpeedParameter * SpeedBuff;
     }
 }

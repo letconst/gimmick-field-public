@@ -67,14 +67,14 @@ public class TresureBox : MonoBehaviour, IActionable
 
     void Update()
     {
-        if (isOpen)
+        if (isOpen && !isOpened)
         {
             //開く動作
             TresureBoxOpen();
         }
     }
 
-    public void Action()
+    public void Action(HandType handType)
     {
         if (!isOpen && !isOpened)
         {
@@ -84,12 +84,31 @@ public class TresureBox : MonoBehaviour, IActionable
             _RightJoyCon.Set(_float4.x, _float4.y, _float4.z, _float4.w);
             SwitchInputController.Instance.LeftJoyConRotaion.GetQuaternion(ref _float4);
             _LeftJoyCon.Set(_float4.x, _float4.y, _float4.z, _float4.w);
+
+            // 手を掴む位置に移動
+            PlayerHandController
+                .SetPositionTo(PlayerHandController.HandPosition.TreasureBoxGrab, PlayerHandController.Hand.Left)
+                .Forget();
+
+            PlayerHandController
+                .SetPositionTo(PlayerHandController.HandPosition.TreasureBoxGrab, PlayerHandController.Hand.Right)
+                .Forget();
         }
     }
 
-    public void DeAction()
+    public void DeAction(HandType handType)
     {
         isOpen = false;
+
+        // 手の位置を初期位置に戻す
+        if (!isOpened)
+        {
+            PlayerHandController.SetPositionTo(PlayerHandController.HandPosition.Idle, PlayerHandController.Hand.Left)
+                                .Forget();
+
+            PlayerHandController.SetPositionTo(PlayerHandController.HandPosition.Idle, PlayerHandController.Hand.Right)
+                                .Forget();
+        }
     }
 
     private void TresureBoxOpen()
@@ -109,7 +128,9 @@ public class TresureBox : MonoBehaviour, IActionable
                 SwitchInputController.Instance.LJoyConAccel.x                    >= _successAccel)
             {
                 _animator.SetTrigger(Open);
-                // Gamemaneger.Instance.State = GameState.Result;
+
+                SoundManager.PlaySound(SoundDef.SetStar_SE);
+
                 //完全に開いた状態でtrue
                 isOpened = true;
 
@@ -120,13 +141,27 @@ public class TresureBox : MonoBehaviour, IActionable
 
     private async void WaitForOpeningAndSetState()
     {
-        // Openになるまで待機
-        await UniTask.WaitUntil(() => _animator.GetCurrentAnimatorStateInfo(0).IsName("Open"));
+        var waitCompleteAnimTask = UniTask.Create(async () =>
+        {
+            // Openになるまで待機
+            await _animator.WaitUntilAnimationNameIs("Open");
+
+            // アニメーション再生が終わるまで待機
+            await _animator.WaitForCurrentAnimation();
+        });
+
+        UniTask playerLHandTransitionTask =
+            PlayerHandController.SetPositionTo(PlayerHandController.HandPosition.TreasureBoxOpened,
+                                               PlayerHandController.Hand.Left);
+
+        UniTask playerRHandTransitionTask =
+            PlayerHandController.SetPositionTo(PlayerHandController.HandPosition.TreasureBoxOpened,
+                                               PlayerHandController.Hand.Right);
 
         // アニメーションが完了するまで待機
-        await UniTask.WaitWhile(() => _animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1);
+        await UniTask.WhenAll(waitCompleteAnimTask, playerLHandTransitionTask, playerRHandTransitionTask);
 
-        Gamemaneger.Instance.State = GameState.Result;
+        Gamemaneger.Instance.SetGameStateToResult(true);
     }
 
     public void ShowOutline()

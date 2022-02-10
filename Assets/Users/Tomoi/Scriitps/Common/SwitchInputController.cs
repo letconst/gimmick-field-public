@@ -3,9 +3,7 @@ using nn.hid;
 using UniRx;
 using UniRx.Triggers;
 using System;
-using System.ComponentModel.Design;
 using nn.util;
-using UnityEngine.InputSystem;
 
 public class SwitchInputController : SingletonMonoBehaviour<SwitchInputController>
 {
@@ -222,7 +220,7 @@ public class SwitchInputController : SingletonMonoBehaviour<SwitchInputControlle
             }
         }
     }
-    
+
     private bool UpdatePadState()
     {
         //コントローラーの持ち方の取得

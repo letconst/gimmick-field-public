@@ -1,14 +1,25 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerManager : SingletonMonoBehaviour<PlayerManager>
 {
+    [FormerlySerializedAs("playerHandTrf")]
     [SerializeField]
-    private Transform playerHandTrf;
+    private Transform leftHandTrf;
 
-    public Transform PlayerHandTrf => playerHandTrf;
+    [SerializeField]
+    private Transform rightHandTrf;
+
+    [SerializeField]
+    private Transform midHandTrf;
+
+    public Transform LeftHandTrf  => leftHandTrf;
+    public Transform RightHandTrf => rightHandTrf;
+
+    public Transform MidHandTrf => midHandTrf;
 
     private IActionable _holdItem;
-    
+
     /// <summary>
     /// プレイヤーが持っているアイテム
     /// </summary>

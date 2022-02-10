@@ -712,6 +712,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   throwSensitivity: 5
   damageAmount: 0
+  takeDamageSpeedThreshold: 0
 --- !u!54 &377863401
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2996,7 +2997,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ab13341440644a9b1dc7d67d1d5db3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHandTrf: {fileID: 199017518}
+  leftHandTrf: {fileID: 199017518}
+  rightHandTrf: {fileID: 0}
 --- !u!4 &1516371597
 Transform:
   m_ObjectHideFlags: 0
@@ -4436,6 +4438,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2023655794}
     - target: {fileID: 7963298228030304758, guid: 976b6c50d0b4fa8418d30e50d876282c, type: 3}
+      propertyPath: handOptions.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7963298228030304758, guid: 976b6c50d0b4fa8418d30e50d876282c, type: 3}
       propertyPath: leftSpiderwebCheckHand
       value: 
       objectReference: {fileID: 831024445}
@@ -4443,6 +4449,34 @@ PrefabInstance:
       propertyPath: rightSpiderwebCheckHand
       value: 
       objectReference: {fileID: 2023655794}
+    - target: {fileID: 7963298228030304758, guid: 976b6c50d0b4fa8418d30e50d876282c, type: 3}
+      propertyPath: handOptions.Array.data[0].data
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7963298228030304758, guid: 976b6c50d0b4fa8418d30e50d876282c, type: 3}
+      propertyPath: handOptions.Array.data[1].HandPosition
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7963298228030304758, guid: 976b6c50d0b4fa8418d30e50d876282c, type: 3}
+      propertyPath: handOptions.Array.data[2].HandPosition
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7963298228030304758, guid: 976b6c50d0b4fa8418d30e50d876282c, type: 3}
+      propertyPath: handOptions.Array.data[0].HandHoldOption
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7963298228030304758, guid: 976b6c50d0b4fa8418d30e50d876282c, type: 3}
+      propertyPath: handOptions.Array.data[1].HandHoldOption
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7963298228030304758, guid: 976b6c50d0b4fa8418d30e50d876282c, type: 3}
+      propertyPath: handOptions.Array.data[0].HoldTransitionRatio
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7963298228030304758, guid: 976b6c50d0b4fa8418d30e50d876282c, type: 3}
+      propertyPath: handOptions.Array.data[1].HoldTransitionRatio
+      value: 0.9
+      objectReference: {fileID: 0}
     - target: {fileID: 7963298228030304763, guid: 976b6c50d0b4fa8418d30e50d876282c, type: 3}
       propertyPath: m_RootOrder
       value: 3

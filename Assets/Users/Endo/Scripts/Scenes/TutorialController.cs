@@ -1,13 +1,15 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
-using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
 
-public class TutorialController : MonoBehaviour
+public class TutorialController : SceneControllerBase
 {
-    private async void Start()
+    protected override async void Start()
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(1));
+        base.Start();
 
-        SoundManager.PlayMusic(MusicDef.Main_BGM, 1, true);
+        // SoundManagerが初期化されるまで待機
+        await UniTask.WaitUntil(() => SoundManager.IsInitialized);
+
+        SoundManager.StopAll();
+        SoundManager.PlayMusic(MusicDef.Tutorial_BGM, isLoop: true);
     }
 }

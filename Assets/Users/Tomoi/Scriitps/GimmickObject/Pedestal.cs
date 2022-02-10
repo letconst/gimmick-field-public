@@ -15,11 +15,16 @@ public class Pedestal : MonoBehaviour
     private bool _isInset = false;
 
     Star _starScript;
+
+    private Quaternion setStarQuaternion;
     private void Start()
     {
         SetStarPosition = this.gameObject.transform.position;
         SetStarPosition.y += _SetYPosition;
         SetStarPosition.z += _SetZPosition;
+        setStarQuaternion = Quaternion.Euler(gameObject.transform.rotation.x, gameObject.transform.rotation.y + 90,
+            gameObject.transform.rotation.z);
+        
 
         if (_isDebug)
         {
@@ -32,6 +37,7 @@ public class Pedestal : MonoBehaviour
         if (Star != null)
         {
             Star.transform.position = SetStarPosition;
+            Star.transform.rotation = setStarQuaternion;
         }
     }
 
@@ -40,15 +46,21 @@ public class Pedestal : MonoBehaviour
         if (!_isInset)
         {
             _starScript = hit.gameObject.GetComponent<Star>() ?? null;
-             
+
             if (_starScript != null)
             {
                 //Starを持てなくする処理
                 _starScript.SetStarOnPosition();
                 //Starを保持
                 Star = hit.gameObject;
+
                 //ここに扉のロックを解除する処理
-                _unLockObject.unLock();
+                if (_unLockObject)
+                {
+                    _unLockObject.unLock();
+                }
+
+                SoundManager.PlaySound(SoundDef.SetStar_SE, position: transform.position);
 
                 _isInset = true;
             }

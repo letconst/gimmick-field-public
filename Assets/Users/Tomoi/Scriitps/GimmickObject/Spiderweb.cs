@@ -1,11 +1,20 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UniRx;
 
 [RequireComponent(typeof(MeshFilter))]
 public class Spiderweb : MonoBehaviour
 {
+     [SerializeField]
+     private Spider spider;
+
+     [SerializeField, Header("炎の煙のパーティクル")]
+     private ParticlePlayer flameSmokeParticle;
+
+     private ParticlePool _flameSmokeParticlePool;
+
      //今プレイヤーを捕まえているか
      private bool _Catch;
      //振り払った回数内側
@@ -25,7 +34,8 @@ public class Spiderweb : MonoBehaviour
 
      private IObservable<SpiderwebChecker.ColliderPosition> _subject;
 
-     private MeshFilter _meshFilter;
+     private MeshFilter   _meshFilter;
+     private MeshCollider _collider;
 
      // プレイヤーを捕まえるか
      public bool canCatch;
@@ -33,11 +43,14 @@ public class Spiderweb : MonoBehaviour
      private void Awake()
      {
           _meshFilter = GetComponent<MeshFilter>();
+          _collider   = GetComponent<MeshCollider>();
      }
 
      void Start()
      {
           _UIinstance = ShowSpiderwebUI.Instance;
+
+          _flameSmokeParticlePool = new ParticlePool(flameSmokeParticle);
 
           _subject = SpiderwebChecker.Instance.OnColliderEnterHand;
 
@@ -67,20 +80,33 @@ public class Spiderweb : MonoBehaviour
                if (success_value <= _ShakeOffCountOutside && success_value <= _ShakeOffCountInside)
                {
                     _Catch = false;
+
+                    _ShakeOffCountInside  = 0;
+                    _ShakeOffCountOutside = 0;
                     ShowSpiderwebUI.Instance.ValueSet(0);
                     Destroy();
                }
           }
      }
 
-     void Destroy()
+     private async void Destroy()
      {
           //UIを非表示にする処理
           _UIinstance.ShowSpiderwebSlider(false);
           //処理
-          PlayerHandController.SetSpiderwebCheckHandActive(false);
-          Destroy(this.gameObject);
+          PlayerHandController.SetSpiderwebCheckHandActive(false,HandType.Both,true);
+          // Destroy(this.gameObject);
+
+          canCatch = false;
+
+          // 巣を透明に
+          spider.SetWebAlpha(0);
+
+          await UniTask.Delay(TimeSpan.FromSeconds(3));
+
+          spider.state = Spider.SpiderState.Idle;
      }
+
      public static float GetAfterDecimalPoint(float self )
      {
           return self % 1;
@@ -90,16 +116,82 @@ public class Spiderweb : MonoBehaviour
      {
           if (canCatch && obj.CompareTag("Player"))
           {
-               PlayerHandController.Instance.playerCaughtSpider = true;
-               PlayerHandController.SetSpiderwebCheckHandActive(true);
+               PlayerActionController _playerAction = obj.GetComponent<PlayerActionController>();
 
-               _Catch                = true;
-               _UIinstance.ShowSpiderwebSlider(true);
-               _UIinstance.ValueSet(0);
-               _PlayerObject = obj.gameObject;
-               _RestraintPoint = obj.transform.position;
+               if (_playerAction._rightHoldGameObject && _playerAction._rightHoldGameObject.CompareTag("Torch") ||
+                   _playerAction._leftHoldGameObject  && _playerAction._leftHoldGameObject.CompareTag("Torch"))
+               {
+                    RemoveSpiderweb();
+
+                    SoundManager.PlaySound(SoundDef.PutOutFire_SE);
+               }
+               else
+               {
+
+                    PlayerHandController.Instance.playerCaughtSpider = true;
+                    PlayerHandController.SetSpiderwebCheckHandActive(true, HandType.Both, true);
+
+                    _Catch = true;
+                    _UIinstance.ShowSpiderwebSlider(true);
+                    _UIinstance.ValueSet(0);
+                    _PlayerObject = obj.gameObject;
+                    _RestraintPoint = obj.transform.position;
+               }
           }
      }
+
+
+     //コピペです
+     /// <summary>
+     /// 蜘蛛の巣を消す
+     /// </summary>
+     private void RemoveSpiderweb()
+     {
+          SpawnParticle(() => Destroy(gameObject), .5f);
+     }
+
+     /// <summary>
+     /// 煙パーティクルを出現させる
+     /// </summary>
+     /// <param name="callback">出現中に実行するコールバック</param>
+     /// <param name="callbackInvokeRate">パーティクルがどのくらいの割合再生されたらコールバックが実行されるか (0-1)</param>
+     private async void SpawnParticle(System.Action callback, float callbackInvokeRate)
+     {
+          ParticlePlayer particle1 = _flameSmokeParticlePool.Rent();
+          ParticlePlayer particle2 = _flameSmokeParticlePool.Rent();
+          particle1.transform.position = transform.position;
+          particle2.transform.position = transform.position;
+          particle1.transform.rotation = transform.rotation * Quaternion.Euler(0, 90, 90);
+          particle2.transform.rotation = transform.rotation * Quaternion.Euler(0, 90, -90);
+
+          particle1.PlayParticle();
+          particle2.PlayParticle();
+
+          float duration          = particle1.selfParticle.main.duration;
+          bool  isCallbackInvoked = false;
+
+          // パーティクルが停止するまで待機
+          while (!particle1.selfParticle.isStopped)
+          {
+               // コールバックがあれば、指定割合で実行
+               if (callback != null)
+               {
+                    float playRate = particle1.selfParticle.time / duration;
+
+                    if (!isCallbackInvoked && callbackInvokeRate <= playRate)
+                    {
+                         isCallbackInvoked = true;
+                         callback();
+                    }
+               }
+
+               await UniTask.Yield(PlayerLoopTiming.Update);
+          }
+
+          _flameSmokeParticlePool.Return(particle1);
+          _flameSmokeParticlePool.Return(particle2);
+     }
+
 
      /// <summary>
      /// 巣オブジェクトのメッシュを設定する
@@ -123,5 +215,6 @@ public class Spiderweb : MonoBehaviour
 
           _meshFilter.mesh.SetVertices(vertices);
           _meshFilter.mesh.SetIndices(indexes.ToArray(), MeshTopology.Triangles, 0);
+          _collider.sharedMesh = _meshFilter.mesh;
      }
 }

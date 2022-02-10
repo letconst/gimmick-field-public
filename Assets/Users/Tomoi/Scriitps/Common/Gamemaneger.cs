@@ -2,7 +2,6 @@ using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UniRx;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Gamemaneger : SingletonMonoBehaviour<Gamemaneger>
@@ -33,11 +32,14 @@ public class Gamemaneger : SingletonMonoBehaviour<Gamemaneger>
     [SerializeField, Range(0, 4), Header("小数点以下の値を何桁表示するか")]
     private int _displayDigitsDecimalPointUndervalue = 0;
 
+    [SerializeField]
+    private Image gameOverBackground;
+
     private bool _timeStart = true;
     private bool _isReachedGameOver;
 
-    private Subject<Unit>     _GameOver = new Subject<Unit>();
-    public  IObservable<Unit> GameOver => _GameOver;
+    private Subject<Unit>     _onGameOver = new Subject<Unit>();
+    public  IObservable<Unit> OnGameOver => _onGameOver;
 
     public GameState State { get; set; }
 
@@ -45,22 +47,6 @@ public class Gamemaneger : SingletonMonoBehaviour<Gamemaneger>
     {
         _maxTime = _countTime;
         CountStart();
-
-        SwitchInputController.Instance.OnClickABXYButtonSubject
-                             .Where(_ => State == GameState.Result)
-                             .Subscribe(_ =>
-                             {
-                                 // FIXME: 暫定
-                                 if (SceneManager.GetActiveScene().name.Equals("TutorialV2"))
-                                 {
-                                     SystemSceneManager.LoadNextScene("MainGameV2", SceneTransition.Fade);
-                                 }
-                                 else
-                                 {
-                                     SystemSceneManager.LoadNextScene("Title", SceneTransition.Fade);
-                                 }
-                             })
-                             .AddTo(this);
 
         this.ObserveEveryValueChanged(x => x.State).Subscribe(OnGameStateChanged).AddTo(this);
 
@@ -97,11 +83,9 @@ public class Gamemaneger : SingletonMonoBehaviour<Gamemaneger>
             {
                 //五段回目の画像変更
                 _hourGlassImage.sprite = _hourGlassSprites[4];
-                _GameOver.OnNext(Unit.Default);
-                timerText.text     = 0.ToString("F" + _displayDigitsDecimalPointUndervalue);
-                _timeStart         = false;
-                _isReachedGameOver = true;
-                State              = GameState.Result;
+                timerText.text = 0.ToString("F" + _displayDigitsDecimalPointUndervalue);
+                _timeStart     = false;
+                SetGameStateToResult(false);
             }
         }
     }
@@ -141,7 +125,7 @@ public class Gamemaneger : SingletonMonoBehaviour<Gamemaneger>
                 {
                     gameOverImg.gameObject.SetActive(true);
                     UniTask a = FadeTransition.FadeIn(gameOverImg);
-                    UniTask b = FadeTransition.FadeIn(SystemProperty.FadeCanvasGroup, 1, 0, 0.7058823529411765f);
+                    UniTask b = FadeTransition.FadeIn(gameOverBackground, 1, 0, 0.7058823529411765f);
 
                     await UniTask.WhenAll(a, b);
                 }
@@ -149,6 +133,22 @@ public class Gamemaneger : SingletonMonoBehaviour<Gamemaneger>
                 break;
             }
         }
+    }
+
+    /// <summary>
+    /// GameStateをリザルトに遷移する
+    /// </summary>
+    /// <param name="isGameClear">ゲームクリアかどうか。falseならゲームオーバー</param>
+    public void SetGameStateToResult(bool isGameClear)
+    {
+        // ゲームオーバーならイベント発行
+        if (!isGameClear)
+        {
+            _onGameOver.OnNext(Unit.Default);
+        }
+
+        _isReachedGameOver = !isGameClear;
+        State              = GameState.Result;
     }
 }
 

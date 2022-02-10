@@ -23,13 +23,15 @@ public interface IActionable
     /// <summary>
     /// アクション開始時の初期化処理
     /// </summary>
-    void Action();
+    /// <param name="handType">どの手でアクションが開始されたか</param>
+    void Action(HandType handType);
 
     /// <summary>
     /// アクション終了時の処理
     /// </summary>
-    void DeAction();
-    
+    /// <param name="handType">どの手でアクションが終了されたか</param>
+    void DeAction(HandType handType);
+
     ///<summary>
     ///Outlineを表示するか
     /// </summary>
@@ -39,10 +41,12 @@ public interface IActionable
     /// Outlineを表示する
     /// </summary>
     void ShowOutline();
+
     /// <summary>
-    ///Outlineを非表示にする 
+    ///Outlineを非表示にする
     /// </summary>
     void HideOutline();
+
     /// <summary>
     /// どの手で入力されたときにアクションを実行するか
     /// </summary>

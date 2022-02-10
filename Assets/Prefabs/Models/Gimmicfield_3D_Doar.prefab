@@ -60,7 +60,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e898184f40895a34b97c882746f6e841, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _successRotation: 0.4
+  isGameClearWhenOpened: 0
+  _successRotation: 0.2
   _successAccel: 0.1
   _rightDoar: {fileID: 7187190408871654250}
   _leftDoar: {fileID: 6555141810165854317}

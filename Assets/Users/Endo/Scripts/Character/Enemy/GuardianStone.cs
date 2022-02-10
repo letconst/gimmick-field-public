@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class GuardianStone : MonoBehaviour
@@ -33,8 +34,11 @@ public class GuardianStone : MonoBehaviour
             h?.OnDamaged(damageAmount, gameObject);
         }
 
+        // SE再生
+        SoundManager.PlaySound(SoundDef.StoneCollision_SE, position: transform.position);
+
         // 破棄処理
-        // TODO: エフェクト
+        SpawnParticle();
         Guardian.Instance.stonePool.Return(this);
     }
 
@@ -45,5 +49,20 @@ public class GuardianStone : MonoBehaviour
     public void AddForce(Vector3 force)
     {
         _selfRig.AddForce(force, ForceMode.VelocityChange);
+    }
+
+    private async void SpawnParticle()
+    {
+        ParticlePlayer particle = SceneControllerBase.Instance.dustParticlePool.Rent();
+        particle.transform.position = transform.position;
+        particle.PlayParticle();
+
+        // パーティクルが停止するまで待機
+        while (!particle.selfParticle.isStopped)
+        {
+            await UniTask.Yield(PlayerLoopTiming.Update);
+        }
+
+        MainGameController.Instance.dustParticlePool.Return(particle);
     }
 }

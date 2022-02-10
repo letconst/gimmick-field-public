@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class WeakWall : MonoBehaviour
 {
-    [SerializeField, Header("砂煙パーティクル")]
+    [SerializeField, Header("破壊時の砂煙パーティクル")]
     private ParticlePlayer dustParticle;
 
     [SerializeField, Header("破壊時に破片を物理挙動させるか")]
     private bool isBreakAsShard;
 
+    [SerializeField, Header("破壊後、壁が破棄されるまでの秒数"), Range(0, 3)]
+    private float destroyingSeconds;
+
     private ParticlePool _dustParticlePool;
 
     private List<WeakWallShard> _shards;
+
+    private bool _isBreaked;
 
     private void Start()
     {
@@ -29,7 +34,7 @@ public class WeakWall : MonoBehaviour
     /// </summary>
     private void BreakWall()
     {
-        SpawnParticle(() => Destroy(gameObject), .5f);
+        SpawnParticle(() => Destroy(gameObject), destroyingSeconds);
     }
 
     /// <summary>
@@ -76,8 +81,14 @@ public class WeakWall : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag("PlayerStone"))
+        // プレイヤーまたは守護者の投げた石があたった場合に破壊処理
+        if (collision.collider.CompareTag("PlayerStone") || collision.collider.CompareTag("GuardianStone"))
         {
+            // 重複防止
+            if (_isBreaked) return;
+
+            _isBreaked = true;
+
             BreakWall();
 
             // 破片を物理動かすなら各破片に重力を設定

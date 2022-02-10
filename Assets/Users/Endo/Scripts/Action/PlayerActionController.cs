@@ -26,6 +26,16 @@ public class PlayerActionController : MonoBehaviour
     /// <summary>右手でアクション中のオブジェクト</summary>
     private IActionable _rightHoldObj;
 
+    /// <summary>視点を合わせているオブジェクト</summary>
+    public GameObject _focusObjectGameObject{private set; get; }
+
+    /// <summary>左手でアクション中のオブジェクト</summary>
+    public GameObject _leftHoldGameObject {private set; get; }
+
+    /// <summary>右手でアクション中のオブジェクト</summary>
+    public GameObject _rightHoldGameObject {private set; get; }
+
+
     /// <summary>
     /// ZR,ZLの同時押しの判定用
     /// 片方がGetButtonDownされたらtrueになる
@@ -161,7 +171,8 @@ public class PlayerActionController : MonoBehaviour
 
                 // 左手に持たせてアクション実行
                 _leftHoldObj = _focusObject;
-                _leftHoldObj?.Action();
+                _leftHoldGameObject = _focusObjectGameObject;
+                _leftHoldObj?.Action(HandType.Left);
 
                 break;
             }
@@ -175,7 +186,8 @@ public class PlayerActionController : MonoBehaviour
 
                 // 右手に持たせてアクション実行
                 _rightHoldObj = _focusObject;
-                _rightHoldObj?.Action();
+                _rightHoldGameObject = _focusObjectGameObject;
+                _rightHoldObj?.Action(HandType.Right);
 
                 break;
             }
@@ -188,14 +200,16 @@ public class PlayerActionController : MonoBehaviour
                 if (pushing_simultaneous_L && !pushing_simultaneous_R && _leftHoldObj == null)
                 {
                     _leftHoldObj = _focusObject;
-                    _leftHoldObj?.Action();
+                    _leftHoldGameObject = _focusObjectGameObject;
+                    _leftHoldObj?.Action(HandType.Left);
                 }
                 else if (pushing_simultaneous_R  &&
                          !pushing_simultaneous_L &&
                          _rightHoldObj == null)
                 {
                     _rightHoldObj = _focusObject;
-                    _rightHoldObj?.Action();
+                    _rightHoldGameObject = _focusObjectGameObject;
+                    _rightHoldObj?.Action(HandType.Right);
                 }
 
                 break;
@@ -212,7 +226,8 @@ public class PlayerActionController : MonoBehaviour
                 {
                     // 両手に持たせてアクション実行
                     _leftHoldObj = _rightHoldObj = _focusObject;
-                    _focusObject?.Action();
+                    _leftHoldGameObject = _rightHoldGameObject = _focusObjectGameObject;
+                    _focusObject?.Action(HandType.Both);
                 }
 
                 break;
@@ -222,14 +237,16 @@ public class PlayerActionController : MonoBehaviour
         // トリガー開放時にオブジェクトを持ってるなら開放処理実行
         if (_ZLStatus == SwitchInputController.Status.GetButtonUp)
         {
-            _leftHoldObj?.DeAction();
+            _leftHoldObj?.DeAction(HandType.Left);
             _leftHoldObj = null;
+            _leftHoldGameObject = null;
         }
 
         if (_ZRStatus == SwitchInputController.Status.GetButtonUp)
         {
-            _rightHoldObj?.DeAction();
+            _rightHoldObj?.DeAction(HandType.Right);
             _rightHoldObj = null;
+            _rightHoldGameObject = null;
         }
     }
 
@@ -253,15 +270,17 @@ public class PlayerActionController : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, actionRange))
         {
             var act = hit.collider.GetComponent<IActionable>();
-
+            GameObject actObj = hit.collider.gameObject;
             if (act == null)
             {
                 _focusObject = null;
+                _focusObjectGameObject = null;
 
                 return false;
             }
 
             _focusObject = act;
+            _focusObjectGameObject = actObj;
 
             //アウトラインを表示するか判定
 
@@ -294,36 +313,9 @@ public class PlayerActionController : MonoBehaviour
         }
 
         _focusObject = null;
+        _focusObjectGameObject = null;
 
         return false;
-    }
-
-    /// <summary>
-    /// 最も近いアクション可能オブジェクトをアクションする
-    /// </summary>
-    private void DoActionClosest()
-    {
-        // アクション対象が存在するときのみ処理
-        if (_sortedInRangeObjects.Count == 0) return;
-
-        // 範囲内のオブジェクトを近い順にソート
-        _sortedInRangeObjects.Sort((a, b) =>
-        {
-            float aDis = Vector3.Distance(a.transform.position, transform.position);
-            float bDis = Vector3.Distance(b.transform.position, transform.position);
-
-            return (aDis - bDis) < 0 ? -1 : 1;
-        });
-
-        // 最も近いオブジェクトをアクションさせる
-        foreach (KeyValuePair<Collider, IActionable> obj in _inRangeObjects)
-        {
-            if (obj.Key != _sortedInRangeObjects[0]) continue;
-
-            obj.Value.Action();
-
-            break;
-        }
     }
 
     private void OnTriggerEnter(Collider other)

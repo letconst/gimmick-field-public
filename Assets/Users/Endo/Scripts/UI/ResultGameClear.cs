@@ -28,7 +28,7 @@ public class ResultGameClear : SingletonMonoBehaviour<ResultGameClear>
         _backgroundImage          = GetComponent<Image>();
         _backgroundImage.material = backgroundMaterial;
 
-        backgroundMaterial.SetFloat(MaskSize, .01f);
+        backgroundMaterial.SetFloat(MaskSize, 0);
     }
 
 #if UNITY_EDITOR

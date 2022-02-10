@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5098535423820669823}
   - component: {fileID: 8616672322180893797}
   - component: {fileID: 8616672322180893796}
-  - component: {fileID: 5883688071646063605}
+  - component: {fileID: 2417594512139331165}
   m_Layer: 0
   m_Name: Stone2
   m_TagString: PlayerStone
@@ -92,7 +92,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 910791039101047059}
   serializedVersion: 2
-  m_Mass: 50
+  m_Mass: 1
   m_Drag: 1
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -112,10 +112,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89fffe6f2b56480b9b4d579ed46135b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throwSensitivity: 5
+  throwSensitivity: 3
   damageAmount: 1
---- !u!65 &5883688071646063605
-BoxCollider:
+  takeDamageSpeedThreshold: 3
+--- !u!64 &2417594512139331165
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -124,6 +125,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.31549764, y: 0.16320454, z: 0.24799669}
-  m_Center: {x: 0.011341229, y: 0.017769475, z: -0.037795674}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -3758573805739257388, guid: 47c47a3f5562bdb4f9782bef986f8e72, type: 3}
