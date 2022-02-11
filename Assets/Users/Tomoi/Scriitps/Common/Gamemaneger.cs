@@ -48,6 +48,22 @@ public class Gamemaneger : SingletonMonoBehaviour<Gamemaneger>
         _maxTime = _countTime;
         CountStart();
 
+        SwitchInputController.Instance
+                             .OnClickABXYButtonSubject
+                             .Where(_ => State == GameState.Result && !_isReachedGameOver)
+                             .Subscribe(button =>
+                             {
+                                 // FIXME: 暫定
+                                 if (SystemSceneManager.GetCurrentSceneName().Equals("TutorialV2"))
+                                 {
+                                     SystemSceneManager.LoadNextScene("MainGameV2", SceneTransition.Fade).Forget();
+                                 }
+                                 else
+                                 {
+                                     SystemSceneManager.LoadNextScene("Title", SceneTransition.Fade).Forget();
+                                 }
+                             });
+
         this.ObserveEveryValueChanged(x => x.State).Subscribe(OnGameStateChanged).AddTo(this);
 
         State = GameState.Main;
@@ -83,8 +99,8 @@ public class Gamemaneger : SingletonMonoBehaviour<Gamemaneger>
             {
                 //五段回目の画像変更
                 _hourGlassImage.sprite = _hourGlassSprites[4];
-                timerText.text = 0.ToString("F" + _displayDigitsDecimalPointUndervalue);
-                _timeStart     = false;
+                timerText.text         = 0.ToString("F" + _displayDigitsDecimalPointUndervalue);
+                _timeStart             = false;
                 SetGameStateToResult(false);
             }
         }
